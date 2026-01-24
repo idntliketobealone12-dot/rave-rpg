@@ -17,22 +17,22 @@ export class raveItem extends Item {
     const item = this;
     const actor = this.actor;
 
-    // 1. 무기가 아닌 경우: 채팅창에 설명만 출력
+    // 1. 무기가 아닌 경우: 채팅창에 설명 출력
     if (!item.system.isWeapon) {
       const description = await TextEditor.enrichHTML(item.system.description, { async: true });
       ChatMessage.create({
         user: game.user.id,
         speaker: ChatMessage.getSpeaker({ actor: actor }),
         content: `
-          <div class="rave-roll-card">
-            <header class="card-header">
-              <img src="${item.img}" width="30" height="30"/>
-              <h3 class="item-name">${item.name}</h3>
-            </header>
-            <div class="card-content" style="border:none;">
-              ${description}
+            <div class="chat-card item-card">
+                <header class="card-header flexrow">
+                    <img src="${item.img}" title="${item.name}" width="36" height="36"/>
+                    <h3 class="item-name">${item.name}</h3>
+                </header>
+                <div class="card-content">
+                    ${description}
+                </div>
             </div>
-          </div>
         `
       });
       return;
@@ -85,59 +85,49 @@ export class raveItem extends Item {
             // --- 2. 피해 굴림 ---
             let baseDamageStr = item.system.formula || "0";
             let finalDamageFormula = "";
-            let damageClass = ""; 
 
-            // 공식: {기본, 비교주사위}kh + 능력치
             if (damageMode === "enhanced") {
                 finalDamageFormula = `{ ${baseDamageStr}, 1d12 }kh + ${abilityVal}`;
-                damageClass = "enhanced";
             } else if (damageMode === "impaired") {
                 finalDamageFormula = `{ ${baseDamageStr}, 1d4 }kl + ${abilityVal}`;
-                damageClass = "impaired";
             } else {
                 finalDamageFormula = `${baseDamageStr} + ${abilityVal}`;
             }
             const damageRoll = new Roll(finalDamageFormula, actor.getRollData());
             await damageRoll.evaluate();
 
-            // --- 3. 채팅 메시지 ---
+            // --- 3. 채팅 메시지 전송 ---
             const description = await TextEditor.enrichHTML(item.system.description, { async: true });
             
             let damageLabelText = game.i18n.localize("RAVE.SheetLabels.Normal");
             if (damageMode === "enhanced") damageLabelText = game.i18n.localize("RAVE.SheetLabels.Enhanced");
             if (damageMode === "impaired") damageLabelText = game.i18n.localize("RAVE.SheetLabels.Impaired");
 
-            // 툴팁 가져오기 (이미 div.dice-tooltip을 포함하고 있음)
-            const attackTooltip = await attackRoll.getTooltip();
-            const damageTooltip = await damageRoll.getTooltip();
+            // [핵심] Foundry 기본 렌더링 사용 (기교 X)
+            const attackRollHTML = await attackRoll.render();
+            const damageRollHTML = await damageRoll.render();
 
             const messageContent = `
-              <div class="rave-roll-card">
-                <header class="card-header">
-                  <img src="${item.img}" width="30" height="30"/>
-                  <h3 class="item-name">${item.name}</h3>
-                </header>
-
-                <div class="card-content">
-                    ${description}
-                </div>
-
-                <div class="dice-roll">
-                    <div class="dice-result">
-                        <div class="roll-label">${game.i18n.localize("RAVE.SheetLabels.RollAttack")}</div>
-                        ${attackTooltip}
-                        <h4 class="dice-total">${attackRoll.total}</h4>
+                <div class="chat-card item-card">
+                    <header class="card-header flexrow">
+                        <img src="${item.img}" title="${item.name}" width="36" height="36"/>
+                        <h3 class="item-name">${item.name}</h3>
+                    </header>
+                    
+                    <div class="card-content">
+                        ${description}
                     </div>
-                </div>
 
-                <div class="dice-roll">
-                    <div class="dice-result">
-                        <div class="roll-label ${damageClass}">${damageLabelText} 피해</div>
-                        ${damageTooltip}
-                        <h4 class="dice-total damage">${damageRoll.total}</h4>
+                    <div style="margin-top: 10px; font-weight: bold;">
+                        ${game.i18n.localize("RAVE.SheetLabels.RollAttack")}
                     </div>
+                    ${attackRollHTML}
+
+                    <div style="margin-top: 10px; font-weight: bold;">
+                        ${damageLabelText} 피해
+                    </div>
+                    ${damageRollHTML}
                 </div>
-              </div>
             `;
 
             ChatMessage.create({

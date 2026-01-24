@@ -4,7 +4,8 @@
     <div class="header-fields">
       <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="이름"/></h1>
       
-      <div class="resources grid grid-5col">
+      <div class="resources grid grid-3col">
+        
         {{!-- 1. HP --}}
         <div class="resource flex-group-center">
           <label for="system.health.value" class="resource-label">HP (생명력)</label>
@@ -14,6 +15,7 @@
             <input type="text" name="system.health.max" value="{{system.health.max}}" data-dtype="Number"/>
           </div>
         </div>
+
         {{!-- 2. Wounds --}}
         <div class="resource flex-group-center">
           <label for="system.attributes.wounds.value" class="resource-label">부상 (내구)</label>
@@ -23,6 +25,7 @@
             <input type="text" name="system.attributes.wounds.max" value="{{system.attributes.wounds.max}}" data-dtype="Number" disabled/>
           </div>
         </div>
+
         {{!-- 3. AC --}}
         <div class="resource flex-group-center">
           <label for="system.attributes.ac.value" class="resource-label">AC (방어)</label>
@@ -30,6 +33,7 @@
             <input type="text" name="system.attributes.ac.value" value="{{system.attributes.ac.value}}" data-dtype="Number"/>
           </div>
         </div>
+
         {{!-- 4. Level --}}
         <div class="resource flex-group-center">
           <label for="system.attributes.level.value" class="resource-label">레벨</label>
@@ -37,7 +41,16 @@
             <input type="text" name="system.attributes.level.value" value="{{system.attributes.level.value}}" data-dtype="Number"/>
           </div>
         </div>
-        {{!-- 5. Slots --}}
+
+        {{!-- 5. XP (단일 입력으로 변경) --}}
+        <div class="resource flex-group-center">
+          <label for="system.attributes.xp.value" class="resource-label">경험치 (XP)</label>
+          <div class="resource-content flexrow flex-center flex-between">
+            <input type="text" name="system.attributes.xp.value" value="{{system.attributes.xp.value}}" data-dtype="Number"/>
+          </div>
+        </div>
+
+        {{!-- 6. Slots --}}
         <div class="resource flex-group-center">
           <label class="resource-label">물건 칸 (Slots)</label>
           <div class="resource-content flexrow flex-center flex-between">
@@ -46,6 +59,7 @@
             <input type="text" name="system.attributes.slots.max" value="{{system.attributes.slots.max}}" data-dtype="Number" disabled/>
           </div>
         </div>
+
       </div>
     </div>
   </header>

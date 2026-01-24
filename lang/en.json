@@ -8,6 +8,7 @@
     },
     "Attributes": {
       "Level": "레벨",
+      "XP": "경험치",
       "Wounds": "부상 (내구)",
       "Slots": "물건 칸"
     },

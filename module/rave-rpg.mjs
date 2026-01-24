@@ -6,7 +6,12 @@ import { preloadHandlebarsTemplates } from './helpers/templates.mjs';
 import { RAVE } from './helpers/config.mjs';
 
 Hooks.once('init', function () {
-  game.raverpg = { raveActor, raveItem, rollItemMacro };
+  game.raverpg = {
+    raveActor,
+    raveItem,
+    rollItemMacro,
+  };
+
   CONFIG.RAVE = RAVE;
 
   CONFIG.Combat.initiative = {
@@ -19,12 +24,24 @@ Hooks.once('init', function () {
   CONFIG.ActiveEffect.legacyTransferral = false;
 
   Actors.unregisterSheet('core', ActorSheet);
-  Actors.registerSheet('rave-rpg', raveActorSheet, { makeDefault: true, label: 'RAVE.SheetLabels.Actor' });
+  Actors.registerSheet('rave-rpg', raveActorSheet, {
+    makeDefault: true,
+    label: 'RAVE.SheetLabels.Actor',
+  });
   Items.unregisterSheet('core', ItemSheet);
-  Items.registerSheet('rave-rpg', raveItemSheet, { makeDefault: true, label: 'RAVE.SheetLabels.Item' });
+  Items.registerSheet('rave-rpg', raveItemSheet, {
+    makeDefault: true,
+    label: 'RAVE.SheetLabels.Item',
+  });
 
-  // [중요] Handlebars Helper 등록 (이게 있어야 eq가 작동합니다!)
-  registerHandlebarsHelpers();
+  // [수정됨] 헬퍼 등록을 여기서 직접 실행 (확실한 작동 보장)
+  Handlebars.registerHelper('toLowerCase', function (str) {
+    return str.toLowerCase();
+  });
+
+  Handlebars.registerHelper('eq', function (a, b) {
+    return a === b;
+  });
 
   return preloadHandlebarsTemplates();
 });
@@ -33,28 +50,18 @@ Hooks.once('ready', function () {
   Hooks.on('hotbarDrop', (bar, data, slot) => createItemMacro(data, slot));
 });
 
-/**
- * Handlebars 헬퍼 함수 등록
- */
-function registerHandlebarsHelpers() {
-  Handlebars.registerHelper('toLowerCase', function (str) {
-    return str.toLowerCase();
-  });
-
-  // [추가됨] 두 값이 같은지 비교하는 eq 헬퍼
-  Handlebars.registerHelper('eq', function (a, b) {
-    return a === b;
-  });
-}
-
 async function createItemMacro(data, slot) {
   if (data.type !== 'Item') return;
   if (!data.uuid.includes('Actor.') && !data.uuid.includes('Token.')) {
-    return ui.notifications.warn('You can only create macro buttons for owned Items');
+    return ui.notifications.warn(
+      'You can only create macro buttons for owned Items'
+    );
   }
   const item = await Item.fromDropData(data);
   const command = `game.raverpg.rollItemMacro("${data.uuid}");`;
-  let macro = game.macros.find((m) => m.name === item.name && m.command === command);
+  let macro = game.macros.find(
+    (m) => m.name === item.name && m.command === command
+  );
   if (!macro) {
     macro = await Macro.create({
       name: item.name,
@@ -69,11 +76,16 @@ async function createItemMacro(data, slot) {
 }
 
 function rollItemMacro(itemUuid) {
-  const dropData = { type: 'Item', uuid: itemUuid };
+  const dropData = {
+    type: 'Item',
+    uuid: itemUuid,
+  };
   Item.fromDropData(dropData).then((item) => {
     if (!item || !item.parent) {
       const itemName = item?.name ?? itemUuid;
-      return ui.notifications.warn(`Could not find item ${itemName}.`);
+      return ui.notifications.warn(
+        `Could not find item ${itemName}. You may need to delete and recreate this macro.`
+      );
     }
     item.roll();
   });

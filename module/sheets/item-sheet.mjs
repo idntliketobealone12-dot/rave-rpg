@@ -1,8 +1,3 @@
-import {
-  onManageActiveEffect,
-  prepareActiveEffectCategories,
-} from '../helpers/effects.mjs';
-
 /**
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
@@ -27,11 +22,8 @@ export class raveItemSheet extends ItemSheet {
   /** @override */
   get template() {
     const path = 'systems/rave-rpg/templates/item';
-    // Return a single sheet for all item types.
-    // return `${path}/item-sheet.hbs`;
-
-    // Alternatively, you could use the following return statement to do a
-    // unique item sheet by type, like `weapon-sheet.hbs`.
+    // [수정됨] 아이템 타입에 따라 다른 hbs 파일을 불러옵니다.
+    // 예: 타입이 'item'이면 'item-item-sheet.hbs'를 로드
     return `${path}/item-${this.item.type}-sheet.hbs`;
   }
 
@@ -39,21 +31,16 @@ export class raveItemSheet extends ItemSheet {
 
   /** @override */
   getData() {
-    // Retrieve base data structure.
     const context = super.getData();
+    const itemData = context.item;
 
-    // Use a safe clone of the item data for further operations.
-    const itemData = context.data;
+    context.rollData = {};
+    if (itemData.getRollData) {
+      context.rollData = itemData.getRollData();
+    }
 
-    // Retrieve the roll data for TinyMCE editors.
-    context.rollData = this.item.getRollData();
-
-    // Add the item's data to context.data for easier access, as well as flags.
     context.system = itemData.system;
     context.flags = itemData.flags;
-
-    // Prepare active effects for easier access
-    context.effects = prepareActiveEffectCategories(this.item.effects);
 
     return context;
   }
@@ -63,15 +50,8 @@ export class raveItemSheet extends ItemSheet {
   /** @override */
   activateListeners(html) {
     super.activateListeners(html);
-
-    // Everything below here is only needed if the sheet is editable
     if (!this.isEditable) return;
 
     // Roll handlers, click handlers, etc. would go here.
-
-    // Active Effect management
-    html.on('click', '.effect-control', (ev) =>
-      onManageActiveEffect(ev, this.item)
-    );
   }
 }

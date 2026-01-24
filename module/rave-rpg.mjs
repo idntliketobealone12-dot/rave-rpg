@@ -9,7 +9,7 @@ import { preloadHandlebarsTemplates } from './helpers/templates.mjs';
 import { RAVE } from './helpers/config.mjs';
 
 /* -------------------------------------------- */
-/*  Init Hook                                   */
+/* Init Hook                                   */
 /* -------------------------------------------- */
 
 Hooks.once('init', function () {
@@ -26,10 +26,11 @@ Hooks.once('init', function () {
 
   /**
    * Set an initiative formula for the system
+   * RAVE RPG: 1d20 + 의지
    * @type {String}
    */
   CONFIG.Combat.initiative = {
-    formula: '1d20 + @abilities.dex.mod',
+    formula: '1d20 + @abilities.wil.value',
     decimals: 2,
   };
 
@@ -59,7 +60,7 @@ Hooks.once('init', function () {
 });
 
 /* -------------------------------------------- */
-/*  Handlebars Helpers                          */
+/* Handlebars Helpers                          */
 /* -------------------------------------------- */
 
 // If you need to add Handlebars helpers, here is a useful example:
@@ -68,7 +69,7 @@ Handlebars.registerHelper('toLowerCase', function (str) {
 });
 
 /* -------------------------------------------- */
-/*  Ready Hook                                  */
+/* Ready Hook                                  */
 /* -------------------------------------------- */
 
 Hooks.once('ready', function () {
@@ -77,7 +78,7 @@ Hooks.once('ready', function () {
 });
 
 /* -------------------------------------------- */
-/*  Hotbar Macros                               */
+/* Hotbar Macros                               */
 /* -------------------------------------------- */
 
 /**

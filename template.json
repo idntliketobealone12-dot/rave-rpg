@@ -40,7 +40,9 @@
       "templates": ["base"],
       "quantity": 1,
       "weight": 1,
-      "formula": ""
+      "formula": "1d6",
+      "isWeapon": false,
+      "ability": "str"
     },
     "feature": {
       "templates": ["base"]

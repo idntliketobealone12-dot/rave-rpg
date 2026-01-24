@@ -5,35 +5,18 @@
 export class raveActor extends Actor {
   /** @override */
   prepareData() {
-    // Prepare data for the actor. Calling the super version of this executes
-    // the following, in order: data reset (to clear active effects),
-    // prepareBaseData(), prepareEmbeddedDocuments() (including active effects),
-    // prepareDerivedData().
     super.prepareData();
   }
 
   /** @override */
   prepareBaseData() {
-    // Data modifications in this step occur before processing embedded
-    // documents or derived data.
+    // Data modifications in this step occur before processing embedded documents or derived data.
   }
 
-  /**
-   * @override
-   * Augment the actor source data with additional dynamic data. Typically,
-   * you'll want to handle most of your calculated/derived data in this step.
-   * Data calculated in this step should generally not exist in template.json
-   * (such as ability modifiers rather than ability scores) and should be
-   * available both inside and outside of character sheets (such as if an actor
-   * is queried and has a roll executed directly from it).
-   */
+  /** @override */
   prepareDerivedData() {
     const actorData = this;
-    const systemData = actorData.system;
-    const flags = actorData.flags.raverpg || {};
-
-    // Make separate methods for each Actor type (character, npc, etc.) to keep
-    // things organized.
+    // Make separate methods for each Actor type (character, npc, etc.) to keep things organized.
     this._prepareCharacterData(actorData);
     this._prepareNpcData(actorData);
   }
@@ -44,23 +27,32 @@ export class raveActor extends Actor {
   _prepareCharacterData(actorData) {
     if (actorData.type !== 'character') return;
 
-    // Make modifications to data here. For example:
     const systemData = actorData.system;
 
-    // Loop through ability scores, and add their modifiers to our sheet output.
+    // 1. 능력치 수정치 처리 (RAVE: 수치 = 수정치)
     for (let [key, ability] of Object.entries(systemData.abilities)) {
-      // RAVE: 능력치 수치가 곧 수정치입니다.
       ability.mod = ability.value;
-      // Localization
       ability.label = game.i18n.localize(CONFIG.RAVE.abilities[key]) ?? key;
     }
-    
-    // 파생 수치: 물건 칸 (10 + 힘)
+
+    // 2. 소지품 무게(물건 칸) 자동 계산
+    let totalSlots = 0;
+    // this.items는 액터가 소유한 아이템 컬렉션입니다.
+    for (const item of this.items) {
+      // 아이템 데이터 구조에서 weight와 quantity를 가져옵니다. (없으면 0 또는 1로 취급)
+      const weight = item.system.weight || 0;
+      const quantity = item.system.quantity || 1; 
+      totalSlots += weight * quantity;
+    }
+
+    // 3. 파생 수치 적용
+    // 물건 칸: 현재 사용량(value)과 최대치(max = 10 + 힘)
     if (systemData.attributes.slots) {
+        systemData.attributes.slots.value = totalSlots;
         systemData.attributes.slots.max = 10 + (systemData.abilities.str?.value || 0);
     }
     
-    // 파생 수치: 방어 점수 AC (10 + 재주) - 기본값
+    // 방어 점수(AC): 10 + 재주 (기본)
     if (systemData.attributes.ac) {
         systemData.attributes.ac.value = 10 + (systemData.abilities.dex?.value || 0);
     }
@@ -71,23 +63,17 @@ export class raveActor extends Actor {
    */
   _prepareNpcData(actorData) {
     if (actorData.type !== 'npc') return;
-
-    // Make modifications to data here. For example:
     const systemData = actorData.system;
-    systemData.xp = systemData.cr * systemData.cr * 100;
+    systemData.xp = systemData.cr * systemData.cr * 100; // 예시 XP 계산식
   }
 
   /**
    * Override getRollData() that's supplied to rolls.
    */
   getRollData() {
-    // Starts off by populating the roll data with `this.system`
     const data = { ...super.getRollData() };
-
-    // Prepare character roll data.
     this._getCharacterRollData(data);
     this._getNpcRollData(data);
-
     return data;
   }
 
@@ -97,15 +83,12 @@ export class raveActor extends Actor {
   _getCharacterRollData(data) {
     if (this.type !== 'character') return;
 
-    // Copy the ability scores to the top level, so that rolls can use
-    // formulas like `@str.mod + 4`.
     if (data.abilities) {
       for (let [k, v] of Object.entries(data.abilities)) {
         data[k] = foundry.utils.deepClone(v);
       }
     }
 
-    // Add level for easier access, or fall back to 0.
     if (data.attributes.level) {
       data.lvl = data.attributes.level.value ?? 0;
     }
@@ -116,7 +99,5 @@ export class raveActor extends Actor {
    */
   _getNpcRollData(data) {
     if (this.type !== 'npc') return;
-
-    // Process additional NPC data here.
   }
 }

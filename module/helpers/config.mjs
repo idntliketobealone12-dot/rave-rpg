@@ -1,9 +1,5 @@
 export const RAVE = {};
 
-/**
- * The set of Ability Scores used within the system.
- * @type {Object}
- */
 RAVE.abilities = {
   str: 'RAVE.Ability.Str.long',
   dex: 'RAVE.Ability.Dex.long',

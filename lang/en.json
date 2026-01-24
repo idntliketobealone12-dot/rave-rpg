@@ -1,41 +1,38 @@
 {
   "RAVE": {
     "Ability": {
-      "Str": { "long": "Strength", "abbr": "str" },
-      "Con": { "long": "Constitution", "abbr": "con" },
-      "Dex": { "long": "Dexterity", "abbr": "dex" },
-      "Int": { "long": "Intelligence", "abbr": "int" },
-      "Wis": { "long": "Wisdom", "abbr": "wis" },
-      "Cha": { "long": "Charisma", "abbr": "cha" }
+      "Str": { "long": "힘 (STR)", "abbr": "힘" },
+      "Dex": { "long": "재주 (DEX)", "abbr": "재주" },
+      "Wis": { "long": "통찰 (WIS)", "abbr": "통찰" },
+      "Wil": { "long": "의지 (WIL)", "abbr": "의지" }
     },
     "SheetLabels": {
-      "Actor": "rave Actor Sheet",
-      "Item": "rave Item Sheet"
+      "Actor": "RAVE 캐릭터 시트",
+      "Item": "RAVE 아이템 시트"
     },
     "Item": {
       "Spell": {
-        "SpellLVL": "Level {level} Spells",
-        "AddLVL": "Add LVL {level}"
+        "SpellLVL": "{level}레벨 주문",
+        "AddLVL": "{level}레벨 추가"
       }
     },
     "Effect": {
-      "Source": "Source",
-      "Toggle": "Toggle Effect",
-      "Temporary": "Temporary Effects",
-      "Passive": "Passive Effects",
-      "Inactive": "Inactive Effects"
+      "Source": "출처",
+      "Toggle": "효과 켜기/끄기",
+      "Temporary": "일시적 효과",
+      "Passive": "지속 효과",
+      "Inactive": "비활성 효과"
     }
   },
-
   "TYPES": {
     "Actor": {
-      "character": "Character",
+      "character": "캐릭터",
       "npc": "NPC"
     },
     "Item": {
-      "item": "Item",
-      "feature": "Feature",
-      "spell": "Spell"
+      "item": "물건",
+      "feature": "특성/경력",
+      "spell": "주문"
     }
   }
 }

@@ -1,14 +1,36 @@
-.effects .item {
-  .effect-source,
-  .effect-duration,
-  .effect-controls {
-    text-align: center;
-    border-left: 1px solid #c9c7b8;
-    border-right: 1px solid #c9c7b8;
-    font-size: 12px;
+.effects {
+  .items-list {
+    margin-top: 12px;
   }
+  
+  .item {
+    padding: 8px 4px;
+    border-radius: $border-radius;
+    
+    .effect-source,
+    .effect-duration,
+    .effect-controls {
+      text-align: center;
+      border-left: 1px solid $c-border;
+      border-right: 1px solid $c-border;
+      font-size: 11px;
+      padding: 0 4px;
+    }
 
-  .effect-controls {
-    border: none;
+    .effect-controls {
+      border: none;
+      display: flex;
+      justify-content: flex-end;
+      gap: 4px;
+      
+      a {
+        color: $c-accent;
+        transition: $transition;
+        
+        &:hover {
+          color: darken($c-accent, 10%);
+        }
+      }
+    }
   }
 }

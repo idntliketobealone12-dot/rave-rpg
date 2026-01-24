@@ -1,12 +1,56 @@
 .window-app {
   font-family: $font-primary;
+  background-color: $c-background;
+  color: $c-text;
 }
 
 .rollable {
+  cursor: pointer;
+  transition: $transition;
+  
   &:hover,
   &:focus {
-    color: #000;
-    text-shadow: 0 0 10px red;
-    cursor: pointer;
+    color: $c-accent;
+    text-shadow: 0 0 8px rgba(231, 76, 60, 0.4);
+    transform: scale(1.05);
+  }
+}
+
+/* Button Styles */
+button, .btn {
+  border-radius: $border-radius;
+  border: 1px solid $c-border;
+  padding: 6px 12px;
+  background-color: $c-white;
+  color: $c-text;
+  font-size: 13px;
+  cursor: pointer;
+  transition: $transition;
+  box-shadow: $shadow-sm;
+  
+  &:hover {
+    background-color: $c-background;
+    box-shadow: $shadow-md;
+    transform: translateY(-1px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+    box-shadow: $shadow-sm;
+  }
+}
+
+/* Input Styles */
+input, textarea, select {
+  border: 1px solid $c-border;
+  border-radius: $border-radius;
+  padding: 6px 8px;
+  font-family: $font-primary;
+  transition: $transition;
+  
+  &:focus {
+    outline: none;
+    border-color: $c-primary;
+    box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.1);
   }
 }

@@ -1,3 +1,23 @@
+{{!-- 부상 추가 UI --}}
+<div style="padding: 10px; background-color: #f5f5f5; margin-bottom: 10px; border-radius: 4px;">
+  <h3 style="margin-top: 0;">부상 추가</h3>
+  <div style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 8px; align-items: end;">
+    <div>
+      <label style="font-weight: bold; display: block; margin-bottom: 4px;">부상 이름</label>
+      <input type="text" id="wound-name" placeholder="예: 팔 골절" style="width: 100%; padding: 4px; box-sizing: border-box;"/>
+    </div>
+    <div>
+      <label style="font-weight: bold; display: block; margin-bottom: 4px;">부상 칸 수</label>
+      <input type="number" id="wound-slots" value="1" min="1" style="width: 100%; padding: 4px; box-sizing: border-box;"/>
+    </div>
+    <div>
+      <button type="button" class="add-wound-button" style="padding: 6px 12px; cursor: pointer; white-space: nowrap;">
+        <i class="fas fa-plus"></i> 부상 추가
+      </button>
+    </div>
+  </div>
+</div>
+
 <ol class="items-list effects-list">
   {{#each effects as |section sid|}}
     <li class="items-header flexrow" data-effect-type="{{section.type}}" data-parent-id="{{@root.actor.id}}" >
@@ -17,6 +37,9 @@
         <div class="item-name effect-name flexrow">
           <img class="item-image" src="{{effect.icon}}"/>
           <h4>{{effect.name}}</h4>
+          {{#if effect.flags.rave-rpg.isWound}}
+            <span style="margin-left: 8px; font-weight: bold; color: #c41e3a;">+{{effect.flags.rave-rpg.woundSlots}} 칸</span>
+          {{/if}}
         </div>
         <div class="effect-source">{{effect.sourceName}}</div>
         <div class="effect-duration">{{effect.duration.label}}</div>

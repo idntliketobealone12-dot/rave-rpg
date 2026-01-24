@@ -48,6 +48,78 @@ Hooks.once('init', function () {
 
 Hooks.once('ready', function () {
   Hooks.on('hotbarDrop', (bar, data, slot) => createItemMacro(data, slot));
+  
+  // 채팅 메시지의 피해 버튼 클릭 이벤트 리스너
+  Hooks.on('renderChatMessage', (message, html) => {
+    html.find('.damage-button').click(async (event) => {
+      event.preventDefault();
+      const button = event.currentTarget;
+      const itemId = button.dataset.itemId;
+      const actorId = button.dataset.actorId;
+      const mode = button.dataset.mode;
+      const isCritical = button.dataset.crit === 'true';
+      
+      const actor = game.actors.get(actorId);
+      if (!actor) return;
+      
+      const item = actor.items.get(itemId);
+      if (!item) return;
+      
+      // NPC는 레벨(CR), 캐릭터는 능력치 사용
+      let modifierVal;
+      if (actor.type === 'npc') {
+        modifierVal = actor.system.cr || 0;
+      } else {
+        const abilityKey = item.system.ability || 'str';
+        modifierVal = actor.system.abilities[abilityKey].value;
+      }
+      
+      let baseDamageStr = item.system.formula || "0";
+      let finalDamageFormula = "";
+      let modeLabel = "";
+      
+      if (mode === "enhanced") {
+        finalDamageFormula = `{ ${baseDamageStr}, 1d12 }kh + ${modifierVal}`;
+        modeLabel = game.i18n.localize("RAVE.SheetLabels.Enhanced");
+      } else if (mode === "impaired") {
+        finalDamageFormula = `{ ${baseDamageStr}, 1d4 }kl + ${modifierVal}`;
+        modeLabel = game.i18n.localize("RAVE.SheetLabels.Impaired");
+      } else {
+        finalDamageFormula = `${baseDamageStr} + ${modifierVal}`;
+        modeLabel = game.i18n.localize("RAVE.SheetLabels.Normal");
+      }
+      
+      // 치명타면 피해 2배
+      if (isCritical) {
+        finalDamageFormula = `(${finalDamageFormula}) * 2`;
+      }
+      
+      const damageRoll = new Roll(finalDamageFormula, actor.getRollData());
+      await damageRoll.evaluate();
+      
+      const damageRollHTML = await damageRoll.render();
+      const critText = isCritical ? ` (${game.i18n.localize("RAVE.SheetLabels.Critical")})` : '';
+      
+      const damageContent = `
+        <div class="chat-card item-card">
+          <header class="card-header flexrow">
+            <img src="${item.img}" title="${item.name}" width="24" height="24"/>
+            <h4 class="item-name" style="font-size: 1em; margin: 0;">${item.name} - ${modeLabel} 피해${critText}</h4>
+          </header>
+          ${damageRollHTML}
+        </div>
+      `;
+      
+      ChatMessage.create({
+        user: game.user.id,
+        speaker: ChatMessage.getSpeaker({ actor: actor }),
+        content: damageContent,
+        type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+        rolls: [damageRoll],
+        sound: CONFIG.sounds.dice
+      });
+    });
+  });
 });
 
 async function createItemMacro(data, slot) {

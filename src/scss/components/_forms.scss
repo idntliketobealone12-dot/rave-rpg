@@ -10,11 +10,19 @@
   flex-wrap: wrap;
   justify-content: flex-start;
   margin-bottom: 10px;
+  background: linear-gradient(135deg, $c-primary 0%, $c-primary-light 100%);
+  padding: 12px;
+  border-radius: $border-radius;
+  box-shadow: $shadow-md;
 
   .profile-img {
     flex: 0 0 100px;
     height: 100px;
     margin-right: 10px;
+    border-radius: $border-radius;
+    border: 3px solid $c-white;
+    box-shadow: $shadow-md;
+    object-fit: cover;
   }
 
   .header-fields {
@@ -24,18 +32,52 @@
   h1.charname {
     height: 50px;
     padding: 0px;
-    margin: 5px 0;
+    margin: 0;
     border-bottom: 0;
+    color: $c-white;
+    font-size: 24px;
+    
     input {
       width: 100%;
       height: 100%;
       margin: 0;
+      background-color: rgba($c-white, 0.1);
+      border: 1px solid rgba($c-white, 0.3);
+      color: $c-white;
+      font-size: 24px;
+      padding: 4px 8px;
+      border-radius: $border-radius;
+      
+      &::placeholder {
+        color: rgba($c-white, 0.5);
+      }
+      
+      &:focus {
+        outline: none;
+        background-color: rgba($c-white, 0.15);
+        border-color: rgba($c-white, 0.5);
+      }
     }
   }
 }
 
 .sheet-tabs {
   flex: 0;
+  margin-top: 10px;
+  
+  .item {
+    background-color: rgba(0, 0, 0, 0.05);
+    border: 1px solid $c-border;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: $transition;
+    
+    &.active, &:hover {
+      background-color: $c-primary;
+      color: $c-white;
+      border-color: $c-primary;
+    }
+  }
 }
 
 .sheet-body,
@@ -47,9 +89,11 @@
 .tox {
   .tox-editor-container {
     background: $c-white;
+    border-radius: $border-radius;
+    border: 1px solid $c-border;
   }
 
   .tox-edit-area {
-    padding: 0 8px;
+    padding: 8px;
   }
 }

@@ -1,0 +1,67 @@
+<form class="{{cssClass}}" autocomplete="off">
+  <header class="sheet-header">
+    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+    <div class="header-fields">
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="이름" /></h1>
+      <div class="grid grid-2col">
+        <div class="resource">
+          <label class="resource-label">{{localize "RAVE.SheetLabels.ArmorBonus"}}</label>
+          <input type="text" name="system.acBonus" value="{{system.acBonus}}" data-dtype="Number" />
+        </div>
+        <div class="resource">
+          <label class="resource-label">{{localize "RAVE.SheetLabels.Price"}}</label>
+          <input type="text" name="system.price" value="{{system.price}}" data-dtype="Number" />
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="description">설명</a>
+    <a class="item" data-tab="attributes">속성</a>
+  </nav>
+
+  <section class="sheet-body">
+    <div class="tab" data-group="primary" data-tab="description">
+      {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
+    </div>
+    
+    <div class="tab attributes" data-group="primary" data-tab="attributes">
+      
+      {{!-- 방어구 종류 --}}
+      <div class="form-group">
+        <label>{{localize "RAVE.SheetLabels.ArmorType"}}</label>
+        <select name="system.armorType">
+          {{#select system.armorType}}
+          <option value="shield">방패</option>
+          <option value="light">경갑</option>
+          <option value="medium">중갑</option>
+          <option value="heavy">중갑</option>
+          {{/select}}
+        </select>
+      </div>
+
+      {{!-- 무게 --}}
+      <div class="resource">
+        <label class="resource-label">{{localize "RAVE.SheetLabels.Weight"}}</label>
+        <input type="text" name="system.weight" value="{{system.weight}}" data-dtype="Number" placeholder="1"/>
+      </div>
+
+      {{!-- 불편함 --}}
+      <div class="form-group">
+        <label>
+          <input type="checkbox" name="system.isCumbersome" {{#if system.isCumbersome}}checked{{/if}} />
+          {{localize "RAVE.SheetLabels.Cumbersome"}} (재주 보너스 불가, 은신/수영 -2)
+        </label>
+      </div>
+
+      {{!-- 부속 --}}
+      <div class="form-group">
+        <label>
+          <input type="checkbox" name="system.isAccessory" {{#if system.isAccessory}}checked{{/if}} />
+          {{localize "RAVE.SheetLabels.Accessory"}} (다른 방어구와 함께 입음)
+        </label>
+      </div>
+    </div>
+  </section>
+</form>

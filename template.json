@@ -14,14 +14,15 @@
         "xp": { "value": 0 },
         "ac": { "value": 10 },
         "slots": { "value": 0, "max": 10 },
-        "wounds": { "value": 10, "max": 10 }
+        "wounds": { "value": 0, "max": 10 }
       },
       "abilities": {
         "str": { "value": 0 },
         "dex": { "value": 0 },
         "wis": { "value": 0 },
         "wil": { "value": 0 }
-      }
+      },
+      "money": 0
     },
     "npc": {
       "templates": ["base"],
@@ -42,7 +43,12 @@
       "weight": 1,
       "formula": "1d6",
       "itemType": "general",
-      "ability": "str"
+      "ability": "str",
+      "spellLevel": 0,
+      "acBonus": 0,
+      "price": 0,
+      "isCumbersome": false,
+      "isAccessory": false
     },
     "feature": {
       "templates": ["base"]

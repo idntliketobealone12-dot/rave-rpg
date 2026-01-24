@@ -17,7 +17,7 @@ export class raveItem extends Item {
     const item = this;
     const actor = this.actor;
 
-    // 1. 무기가 아닌 경우
+    // 1. 무기가 아닌 경우: 채팅창에 설명만 출력
     if (!item.system.isWeapon) {
       const description = await TextEditor.enrichHTML(item.system.description, { async: true });
       ChatMessage.create({
@@ -38,7 +38,7 @@ export class raveItem extends Item {
       return;
     }
 
-    // 2. 무기인 경우 Dialog
+    // 2. 무기인 경우: Dialog 생성
     const abilityKey = item.system.ability || 'str';
     const abilityLabel = game.i18n.localize(CONFIG.RAVE.abilities[abilityKey]);
     
@@ -85,8 +85,9 @@ export class raveItem extends Item {
             // --- 2. 피해 굴림 ---
             let baseDamageStr = item.system.formula || "0";
             let finalDamageFormula = "";
-            let damageClass = ""; // CSS 클래스
+            let damageClass = ""; 
 
+            // 공식: {기본, 비교주사위}kh + 능력치
             if (damageMode === "enhanced") {
                 finalDamageFormula = `{ ${baseDamageStr}, 1d12 }kh + ${abilityVal}`;
                 damageClass = "enhanced";
@@ -102,12 +103,11 @@ export class raveItem extends Item {
             // --- 3. 채팅 메시지 ---
             const description = await TextEditor.enrichHTML(item.system.description, { async: true });
             
-            // 라벨 텍스트
             let damageLabelText = game.i18n.localize("RAVE.SheetLabels.Normal");
             if (damageMode === "enhanced") damageLabelText = game.i18n.localize("RAVE.SheetLabels.Enhanced");
             if (damageMode === "impaired") damageLabelText = game.i18n.localize("RAVE.SheetLabels.Impaired");
 
-            // 툴팁 HTML 가져오기 (비동기)
+            // 툴팁 가져오기 (이미 div.dice-tooltip을 포함하고 있음)
             const attackTooltip = await attackRoll.getTooltip();
             const damageTooltip = await damageRoll.getTooltip();
 
@@ -125,7 +125,7 @@ export class raveItem extends Item {
                 <div class="dice-roll">
                     <div class="dice-result">
                         <div class="roll-label">${game.i18n.localize("RAVE.SheetLabels.RollAttack")}</div>
-                        <div class="dice-tooltip">${attackTooltip}</div>
+                        ${attackTooltip}
                         <h4 class="dice-total">${attackRoll.total}</h4>
                     </div>
                 </div>
@@ -133,21 +133,19 @@ export class raveItem extends Item {
                 <div class="dice-roll">
                     <div class="dice-result">
                         <div class="roll-label ${damageClass}">${damageLabelText} 피해</div>
-                        <div class="dice-tooltip">${damageTooltip}</div>
+                        ${damageTooltip}
                         <h4 class="dice-total damage">${damageRoll.total}</h4>
                     </div>
                 </div>
               </div>
             `;
 
-            // 메시지 전송
-            // type: CONST.CHAT_MESSAGE_TYPES.ROLL 을 사용하여 Foundry가 주사위로 인식하게 함
             ChatMessage.create({
                 user: game.user.id,
                 speaker: ChatMessage.getSpeaker({ actor: actor }),
                 content: messageContent,
                 type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-                rolls: [attackRoll, damageRoll], // 3D 주사위 연동 및 데이터 보존
+                rolls: [attackRoll, damageRoll],
                 sound: CONFIG.sounds.dice
             });
           }

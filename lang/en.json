@@ -14,7 +14,15 @@
     },
     "SheetLabels": {
       "Actor": "RAVE 캐릭터 시트",
-      "Item": "RAVE 아이템 시트"
+      "Item": "RAVE 아이템 시트",
+      "IsWeapon": "무기 여부",
+      "AttackAbility": "공격 능력치",
+      "DamageType": "피해 유형",
+      "RollAttack": "공격 굴림",
+      "RollDamage": "피해 굴림",
+      "Normal": "일반",
+      "Enhanced": "강화됨 (Enhanced)",
+      "Impaired": "약화됨 (Impaired)"
     },
     "Item": {
       "Spell": {

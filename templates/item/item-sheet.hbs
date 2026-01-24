@@ -9,7 +9,7 @@
           <input type="text" name="system.quantity" value="{{system.quantity}}" data-dtype="Number" />
         </div>
         <div class="resource">
-          <label class="resource-label">물건 칸 (Slots)</label>
+          <label class="resource-label">물건 칸</label>
           <input type="text" name="system.weight" value="{{system.weight}}" data-dtype="Number" />
         </div>
       </div>
@@ -25,10 +25,40 @@
     <div class="tab" data-group="primary" data-tab="description">
       {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
     </div>
+    
     <div class="tab attributes" data-group="primary" data-tab="attributes">
+      
+      {{!-- 아이템 유형 선택 --}}
+      <div class="form-group">
+        <label>{{localize "RAVE.SheetLabels.ItemType"}}</label>
+        <select name="system.itemType">
+          {{#select system.itemType}}
+          <option value="general">{{localize "RAVE.SheetLabels.TypeGeneral"}}</option>
+          <option value="weapon">{{localize "RAVE.SheetLabels.TypeWeapon"}}</option>
+          <option value="spell">{{localize "RAVE.SheetLabels.TypeSpell"}}</option>
+          <option value="mystery">{{localize "RAVE.SheetLabels.TypeMystery"}}</option>
+          {{/select}}
+        </select>
+      </div>
+
+      {{!-- 무기일 때만 공격 능력치 선택 표시 --}}
+      {{#if (eq system.itemType "weapon")}}
+      <div class="form-group">
+        <label>{{localize "RAVE.SheetLabels.AttackAbility"}}</label>
+        <select name="system.ability">
+          {{#select system.ability}}
+          <option value="str">{{localize "RAVE.Ability.Str.long"}}</option>
+          <option value="dex">{{localize "RAVE.Ability.Dex.long"}}</option>
+          <option value="wis">{{localize "RAVE.Ability.Wis.long"}}</option>
+          <option value="wil">{{localize "RAVE.Ability.Wil.long"}}</option>
+          {{/select}}
+        </select>
+      </div>
+      {{/if}}
+
       <div class="resource">
-        <label class="resource-label">판정/피해 공식:</label>
-        <input type="text" name="system.formula" value="{{system.formula}}" data-dtype="String" />
+        <label class="resource-label">{{localize "RAVE.SheetLabels.DiceFormula"}}</label>
+        <input type="text" name="system.formula" value="{{system.formula}}" data-dtype="String" placeholder="예: 1d6"/>
       </div>
     </div>
   </section>

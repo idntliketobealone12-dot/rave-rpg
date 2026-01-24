@@ -1,34 +1,32 @@
 {
   "RAVE": {
     "Ability": {
-      "Str": { "long": "힘 (STR)", "abbr": "힘" },
-      "Dex": { "long": "재주 (DEX)", "abbr": "재주" },
-      "Wis": { "long": "통찰 (WIS)", "abbr": "통찰" },
-      "Wil": { "long": "의지 (WIL)", "abbr": "의지" }
+      "Str": { "long": "힘", "abbr": "힘" },
+      "Dex": { "long": "재주", "abbr": "재주" },
+      "Wis": { "long": "통찰", "abbr": "통찰" },
+      "Wil": { "long": "의지", "abbr": "의지" }
     },
     "Attributes": {
       "Level": "레벨",
-      "XP": "경험치",
-      "Wounds": "부상 (내구)",
+      "XP": "XP",
+      "Wounds": "부상",
       "Slots": "물건 칸"
     },
     "SheetLabels": {
       "Actor": "RAVE 캐릭터 시트",
       "Item": "RAVE 아이템 시트",
-      "IsWeapon": "무기 여부",
+      "ItemType": "유형",
+      "TypeGeneral": "일반 물건",
+      "TypeWeapon": "무기",
+      "TypeSpell": "주문",
+      "TypeMystery": "신비",
       "AttackAbility": "공격 능력치",
-      "DamageType": "피해 유형",
+      "DiceFormula": "주사위",
       "RollAttack": "공격 굴림",
       "RollDamage": "피해 굴림",
       "Normal": "일반",
-      "Enhanced": "강화됨 (Enhanced)",
-      "Impaired": "약화됨 (Impaired)"
-    },
-    "Item": {
-      "Spell": {
-        "SpellLVL": "{level}레벨 주문",
-        "AddLVL": "{level}레벨 추가"
-      }
+      "Enhanced": "강화됨",
+      "Impaired": "약화됨"
     },
     "Effect": {
       "Source": "출처",
@@ -45,8 +43,7 @@
     },
     "Item": {
       "item": "물건",
-      "feature": "특성/경력",
-      "spell": "주문"
+      "feature": "특성/경력"
     }
   }
 }

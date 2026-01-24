@@ -5,61 +5,48 @@
       <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="이름"/></h1>
       
       <div class="resources grid grid-3col">
-        
-        {{!-- 1. HP --}}
         <div class="resource flex-group-center">
-          <label for="system.health.value" class="resource-label">HP (생명력)</label>
+          <label for="system.health.value" class="resource-label">HP</label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="system.health.value" value="{{system.health.value}}" data-dtype="Number"/>
             <span> / </span>
             <input type="text" name="system.health.max" value="{{system.health.max}}" data-dtype="Number"/>
           </div>
         </div>
-
-        {{!-- 2. Wounds --}}
         <div class="resource flex-group-center">
-          <label for="system.attributes.wounds.value" class="resource-label">부상 (내구)</label>
+          <label for="system.attributes.wounds.value" class="resource-label">부상</label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="system.attributes.wounds.value" value="{{system.attributes.wounds.value}}" data-dtype="Number"/>
             <span> / </span>
             <input type="text" name="system.attributes.wounds.max" value="{{system.attributes.wounds.max}}" data-dtype="Number" disabled/>
           </div>
         </div>
-
-        {{!-- 3. AC --}}
         <div class="resource flex-group-center">
-          <label for="system.attributes.ac.value" class="resource-label">AC (방어)</label>
+          <label for="system.attributes.ac.value" class="resource-label">AC</label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="system.attributes.ac.value" value="{{system.attributes.ac.value}}" data-dtype="Number"/>
           </div>
         </div>
-
-        {{!-- 4. Level --}}
         <div class="resource flex-group-center">
           <label for="system.attributes.level.value" class="resource-label">레벨</label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="system.attributes.level.value" value="{{system.attributes.level.value}}" data-dtype="Number"/>
           </div>
         </div>
-
-        {{!-- 5. XP (단일 입력으로 변경) --}}
         <div class="resource flex-group-center">
-          <label for="system.attributes.xp.value" class="resource-label">경험치 (XP)</label>
+          <label for="system.attributes.xp.value" class="resource-label">XP</label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="system.attributes.xp.value" value="{{system.attributes.xp.value}}" data-dtype="Number"/>
           </div>
         </div>
-
-        {{!-- 6. Slots --}}
         <div class="resource flex-group-center">
-          <label class="resource-label">물건 칸 (Slots)</label>
+          <label class="resource-label">물건 칸</label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="system.attributes.slots.value" value="{{system.attributes.slots.value}}" data-dtype="Number" disabled/>
             <span> / </span>
             <input type="text" name="system.attributes.slots.max" value="{{system.attributes.slots.max}}" data-dtype="Number" disabled/>
           </div>
         </div>
-
       </div>
     </div>
   </header>
@@ -68,7 +55,6 @@
     <a class="item" data-tab="features">특성</a>
     <a class="item" data-tab="description">설명</a>
     <a class="item" data-tab="items">물건</a>
-    <a class="item" data-tab="spells">주문</a>
     <a class="item" data-tab="effects">효과</a>
   </nav>
 
@@ -96,9 +82,6 @@
     </div>
     <div class="tab items" data-group="primary" data-tab="items">
        {{> "systems/rave-rpg/templates/actor/parts/actor-items.hbs"}}
-    </div>
-    <div class="tab spells" data-group="primary" data-tab="spells">
-      {{> "systems/rave-rpg/templates/actor/parts/actor-spells.hbs"}}
     </div>
     <div class="tab effects flexcol" data-group="primary" data-tab="effects">
       {{> "systems/rave-rpg/templates/actor/parts/actor-effects.hbs"}}

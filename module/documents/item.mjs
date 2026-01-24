@@ -1,24 +1,15 @@
-/**
- * Extend the basic Item with some very simple modifications.
- * @extends {Item}
- */
 export class raveItem extends Item {
-  /**
-   * Augment the basic Item data model with additional dynamic data.
-   */
   prepareData() {
     super.prepareData();
   }
 
-  /**
-   * Handle clickable rolls.
-   */
   async roll() {
     const item = this;
     const actor = this.actor;
 
     // 1. 무기가 아닌 경우: 채팅창에 설명 출력
-    if (!item.system.isWeapon) {
+    // 'weapon' 타입이 아닐 때는 모두 일반 아이템으로 취급 (주문, 신비 포함)
+    if (item.system.itemType !== 'weapon') {
       const description = await TextEditor.enrichHTML(item.system.description, { async: true });
       ChatMessage.create({
         user: game.user.id,
@@ -38,7 +29,7 @@ export class raveItem extends Item {
       return;
     }
 
-    // 2. 무기인 경우: Dialog 생성
+    // 2. 무기인 경우 ('weapon' 타입): Dialog 생성
     const abilityKey = item.system.ability || 'str';
     const abilityLabel = game.i18n.localize(CONFIG.RAVE.abilities[abilityKey]);
     
@@ -96,14 +87,13 @@ export class raveItem extends Item {
             const damageRoll = new Roll(finalDamageFormula, actor.getRollData());
             await damageRoll.evaluate();
 
-            // --- 3. 채팅 메시지 전송 ---
+            // --- 3. 채팅 메시지 ---
             const description = await TextEditor.enrichHTML(item.system.description, { async: true });
             
             let damageLabelText = game.i18n.localize("RAVE.SheetLabels.Normal");
             if (damageMode === "enhanced") damageLabelText = game.i18n.localize("RAVE.SheetLabels.Enhanced");
             if (damageMode === "impaired") damageLabelText = game.i18n.localize("RAVE.SheetLabels.Impaired");
 
-            // [핵심] Foundry 기본 렌더링 사용 (기교 X)
             const attackRollHTML = await attackRoll.render();
             const damageRollHTML = await damageRoll.render();
 

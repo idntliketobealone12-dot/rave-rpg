@@ -23,12 +23,29 @@ Hooks.once('init', function () {
   Items.unregisterSheet('core', ItemSheet);
   Items.registerSheet('rave-rpg', raveItemSheet, { makeDefault: true, label: 'RAVE.SheetLabels.Item' });
 
+  // [중요] Handlebars Helper 등록 (이게 있어야 eq가 작동합니다!)
+  registerHandlebarsHelpers();
+
   return preloadHandlebarsTemplates();
 });
 
 Hooks.once('ready', function () {
   Hooks.on('hotbarDrop', (bar, data, slot) => createItemMacro(data, slot));
 });
+
+/**
+ * Handlebars 헬퍼 함수 등록
+ */
+function registerHandlebarsHelpers() {
+  Handlebars.registerHelper('toLowerCase', function (str) {
+    return str.toLowerCase();
+  });
+
+  // [추가됨] 두 값이 같은지 비교하는 eq 헬퍼
+  Handlebars.registerHelper('eq', function (a, b) {
+    return a === b;
+  });
+}
 
 async function createItemMacro(data, slot) {
   if (data.type !== 'Item') return;

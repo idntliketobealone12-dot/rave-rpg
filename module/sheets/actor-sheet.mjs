@@ -217,7 +217,7 @@ export class raveActorSheet extends ActorSheet {
    * @param {Event} event   The originating click event
    * @private
    */
-  _onRoll(event) {
+  async _onRoll(event) {
     event.preventDefault();
     const element = event.currentTarget;
     const dataset = element.dataset;
@@ -231,16 +231,42 @@ export class raveActorSheet extends ActorSheet {
       }
     }
 
-    // Handle rolls that supply the formula directly.
+    // Handle rolls that supply the formula directly (Ability Rolls).
     if (dataset.roll) {
-      let label = dataset.label ? `[ability] ${dataset.label}` : '';
-      let roll = new Roll(dataset.roll, this.actor.getRollData());
-      roll.toMessage({
-        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-        flavor: label,
-        rollMode: game.settings.get('core', 'rollMode'),
-      });
-      return roll;
+      let label = dataset.label ? `[판정] ${dataset.label}` : '';
+      
+      // Dialog 생성: 수정치 입력창
+      const content = `
+        <div class="form-group">
+            <label style="font-weight:bold; display:block; margin-bottom:5px;">추가 수정치 (예: +2, -5)</label>
+            <input type="text" name="modifier" value="" placeholder="0" style="width: 100%; box-sizing: border-box;" autofocus/>
+        </div>
+      `;
+
+      new Dialog({
+        title: `${dataset.label || '능력치'} 판정`,
+        content: content,
+        buttons: {
+          roll: {
+            icon: '<i class="fas fa-dice-d20"></i>',
+            label: "굴리기",
+            callback: async (html) => {
+              const modifier = html.find('[name="modifier"]').val();
+              // 수정치가 있으면 공식 뒤에 추가 (+ modifier)
+              const formula = modifier ? `${dataset.roll} + ${modifier}` : dataset.roll;
+              
+              const roll = new Roll(formula, this.actor.getRollData());
+              await roll.toMessage({
+                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                flavor: label,
+                rollMode: game.settings.get('core', 'rollMode'),
+              });
+            }
+          }
+        },
+        default: "roll",
+        close: () => {}
+      }).render(true);
     }
   }
 }

@@ -4,14 +4,9 @@
     "templates": {
       "base": {
         "health": {
-          "value": 10,
+          "value": 6,
           "min": 0,
-          "max": 10
-        },
-        "power": {
-          "value": 5,
-          "min": 0,
-          "max": 5
+          "max": 6
         },
         "biography": ""
       }
@@ -19,29 +14,15 @@
     "character": {
       "templates": ["base"],
       "attributes": {
-        "level": {
-          "value": 1
-        }
+        "level": { "value": 1 },
+        "ac": { "value": 10 },
+        "slots": { "value": 10, "max": 10 }
       },
       "abilities": {
-        "str": {
-          "value": 10
-        },
-        "dex": {
-          "value": 10
-        },
-        "con": {
-          "value": 10
-        },
-        "int": {
-          "value": 10
-        },
-        "wis": {
-          "value": 10
-        },
-        "cha": {
-          "value": 10
-        }
+        "str": { "value": 0 },
+        "dex": { "value": 0 },
+        "wis": { "value": 0 },
+        "wil": { "value": 0 }
       }
     },
     "npc": {
@@ -59,8 +40,8 @@
     "item": {
       "templates": ["base"],
       "quantity": 1,
-      "weight": 0,
-      "formula": "d20 + @str.mod + ceil(@lvl / 2)"
+      "weight": 1,
+      "formula": ""
     },
     "feature": {
       "templates": ["base"]

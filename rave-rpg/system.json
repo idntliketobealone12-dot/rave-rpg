@@ -1,0 +1,47 @@
+{
+  "id": "rave-rpg",
+  "title": "RAVE",
+  "description": "The RAVE system for FoundryVTT!",
+  "authors": [
+    {
+      "name": "blue_sphere",
+      "discord": "blue_sphere"
+    }
+  ],
+  "url": "Replace this with a link to your public repository",
+  "license": "LICENSE.txt",
+  "readme": "README.md",
+  "bugs": "Replace this with a link to file issues or tickets",
+  "changelog": "CHANGELOG.md",
+  "media": [
+    {
+      "type": "setup",
+      "url": "systems/rave-rpg/assets/anvil-impact.png",
+      "thumbnail": "systems/rave-rpg/assets/anvil-impact.png"
+    }
+  ],
+  "version": "2.0.0",
+  "compatibility": {
+    "minimum": 11,
+    "verified": "11.315"
+  },
+  "esmodules": ["module/rave-rpg.mjs"],
+  "styles": ["css/rave-rpg.css"],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "packs": [],
+  "packFolders": [],
+  "socket": false,
+  "manifest": "https://github.com/idntliketobealone12-dot/rave-rpg/blob/main/system.json",
+  "download": "https://github.com/idntliketobealone12-dot/rave-rpg/archive/refs/tags/0.1.zip",
+  "background": "systems/rave-rpg/assets/anvil-impact.png",
+  "gridDistance": 5,
+  "gridUnits": "ft",
+  "primaryTokenAttribute": "health",
+  "secondaryTokenAttribute": "power"
+}

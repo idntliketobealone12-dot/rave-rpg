@@ -1,0 +1,90 @@
+<form class="{{cssClass}} {{actor.type}} flexcol" autocomplete="off">
+  <header class="sheet-header">
+    <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
+    <div class="header-fields">
+      <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="이름"/></h1>
+      
+      <div class="resources grid grid-3col">
+        <div class="resource flex-group-center">
+          <label for="system.health.value" class="resource-label">HP</label>
+          <div class="resource-content flexrow flex-center flex-between">
+            <input type="text" name="system.health.value" value="{{system.health.value}}" data-dtype="Number"/>
+            <span> / </span>
+            <input type="text" name="system.health.max" value="{{system.health.max}}" data-dtype="Number"/>
+          </div>
+        </div>
+        <div class="resource flex-group-center">
+          <label for="system.attributes.wounds.value" class="resource-label">부상</label>
+          <div class="resource-content flexrow flex-center flex-between">
+            <input type="text" name="system.attributes.wounds.value" value="{{system.attributes.wounds.value}}" data-dtype="Number"/>
+            <span> / </span>
+            <input type="text" name="system.attributes.wounds.max" value="{{system.attributes.wounds.max}}" data-dtype="Number" disabled/>
+          </div>
+        </div>
+        <div class="resource flex-group-center">
+          <label for="system.attributes.ac.value" class="resource-label">AC</label>
+          <div class="resource-content flexrow flex-center flex-between">
+            <input type="text" name="system.attributes.ac.value" value="{{system.attributes.ac.value}}" data-dtype="Number"/>
+          </div>
+        </div>
+        <div class="resource flex-group-center">
+          <label for="system.attributes.level.value" class="resource-label">레벨</label>
+          <div class="resource-content flexrow flex-center flex-between">
+            <input type="text" name="system.attributes.level.value" value="{{system.attributes.level.value}}" data-dtype="Number"/>
+          </div>
+        </div>
+        <div class="resource flex-group-center">
+          <label for="system.attributes.xp.value" class="resource-label">XP</label>
+          <div class="resource-content flexrow flex-center flex-between">
+            <input type="text" name="system.attributes.xp.value" value="{{system.attributes.xp.value}}" data-dtype="Number"/>
+          </div>
+        </div>
+        <div class="resource flex-group-center">
+          <label class="resource-label">물건 칸</label>
+          <div class="resource-content flexrow flex-center flex-between">
+            <input type="text" name="system.attributes.slots.value" value="{{system.attributes.slots.value}}" data-dtype="Number" disabled/>
+            <span> / </span>
+            <input type="text" name="system.attributes.slots.max" value="{{system.attributes.slots.max}}" data-dtype="Number" disabled/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="features">특성</a>
+    <a class="item" data-tab="description">설명</a>
+    <a class="item" data-tab="items">물건</a>
+    <a class="item" data-tab="effects">효과</a>
+  </nav>
+
+  <section class="sheet-body">
+    <div class="tab features" data-group="primary" data-tab="features">
+      <section class="grid grid-3col">
+        <aside class="sidebar">
+          <div class="abilities flexcol">
+            {{#each system.abilities as |ability key|}}
+            <div class="ability flexrow flex-group-center">
+              <label for="system.abilities.{{key}}.value" class="resource-label rollable flexlarge align-left" data-roll="d20+@abilities.{{key}}.mod" data-label="{{ability.label}}">{{ability.label}}</label>
+              <input type="text" name="system.abilities.{{key}}.value" value="{{ability.value}}" data-dtype="Number"/>
+            </div>
+            {{/each}}
+          </div>
+        </aside>
+        <section class="main grid-span-2">
+          {{> "systems/rave-rpg/templates/actor/parts/actor-features.hbs"}}
+        </section>
+      </section>
+    </div>
+
+    <div class="tab biography" data-group="primary" data-tab="description">
+      {{editor system.biography target="system.biography" rollData=rollData button=true owner=owner editable=editable}}
+    </div>
+    <div class="tab items" data-group="primary" data-tab="items">
+       {{> "systems/rave-rpg/templates/actor/parts/actor-items.hbs"}}
+    </div>
+    <div class="tab effects flexcol" data-group="primary" data-tab="effects">
+      {{> "systems/rave-rpg/templates/actor/parts/actor-effects.hbs"}}
+    </div>
+  </section>
+</form>

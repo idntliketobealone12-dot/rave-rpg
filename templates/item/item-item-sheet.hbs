@@ -2,14 +2,14 @@
   <header class="sheet-header">
     <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
     <div class="header-fields">
-      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="이름" /></h1>
       <div class="grid grid-2col">
         <div class="resource">
-          <label class="resource-label">Quantity</label>
+          <label class="resource-label">수량</label>
           <input type="text" name="system.quantity" value="{{system.quantity}}" data-dtype="Number" />
         </div>
         <div class="resource">
-          <label class="resource-label">Weight</label>
+          <label class="resource-label">물건 칸 (Slots)</label>
           <input type="text" name="system.weight" value="{{system.weight}}" data-dtype="Number" />
         </div>
       </div>
@@ -18,8 +18,8 @@
 
   {{!-- Sheet Tab Navigation --}}
   <nav class="sheet-tabs tabs" data-group="primary">
-    <a class="item" data-tab="description">Description</a>
-    <a class="item" data-tab="attributes">Attributes</a>
+    <a class="item" data-tab="description">설명</a>
+    <a class="item" data-tab="attributes">속성</a>
   </nav>
 
   {{!-- Sheet Body --}}
@@ -27,36 +27,16 @@
 
     {{!-- Description Tab --}}
     <div class="tab" data-group="primary" data-tab="description">
-      {{!-- To render inline rolls in a TinyMCE editor, you need to pass the parent actor's (if any) roll data to the
-      rollData prop. --}}
       {{editor system.description target="system.description" rollData=rollData button=true owner=owner
       editable=editable}}
     </div>
 
     {{!-- Attributes Tab --}}
     <div class="tab attributes" data-group="primary" data-tab="attributes">
-      {{!-- As you add new fields, add them in here! --}}
       <div class="resource">
-        <label class="resource-label">Roll Formula:</label>
-        <span>{{system.formula}}</span>
-        <div class="grid grid-4col">
-          <div class="grid-span-1">
-            <label class="resource-label">Number of Dice</label>
-            <input type="text" name="system.roll.diceNum" value="{{system.roll.diceNum}}" data-dtype="Number" />
-          </div>
-          <div class="grid-span-1">
-            <label class="resource-label">Die Size</label>
-            <input type="text" name="system.roll.diceSize" value="{{system.roll.diceSize}}" data-dtype="String" />
-          </div>
-          <div class="grid-span-2">
-            <label class="resource-label">Roll Modifier</label>
-            <input type="text" name="system.roll.diceBonus" value="{{system.roll.diceBonus}}" data-dtype="String" />
-          </div>
-        </div>
-
+        <label class="resource-label">판정/피해 공식:</label>
+        <input type="text" name="system.formula" value="{{system.formula}}" data-dtype="String" />
       </div>
     </div>
   </section>
 </form>
-
-{{log system}}

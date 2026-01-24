@@ -14,35 +14,23 @@
     "character": {
       "templates": ["base"],
       "attributes": {
-        "level": {
-          "value": 1
-        },
-        "ac": {
-          "value": 10
-        },
-        "slots": {
-          "value": 0,
-          "max": 10
-        }
+        "level": { "value": 1 },
+        "ac": { "value": 10 },
+        "slots": { "value": 0, "max": 10 }
       },
       "abilities": {
-        "str": {
-          "value": 0
-        },
-        "dex": {
-          "value": 0
-        },
-        "wis": {
-          "value": 0
-        },
-        "wil": {
-          "value": 0
-        }
+        "str": { "value": 0 },
+        "dex": { "value": 0 },
+        "wis": { "value": 0 },
+        "wil": { "value": 0 }
       }
     },
     "npc": {
       "templates": ["base"],
-      "cr": 0
+      "cr": 0,
+      "attributes": {
+        "ac": { "value": 10 }
+      }
     }
   },
   "Item": {

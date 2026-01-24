@@ -3,11 +3,7 @@
     "types": ["character", "npc"],
     "templates": {
       "base": {
-        "health": {
-          "value": 6,
-          "min": 0,
-          "max": 6
-        },
+        "health": { "value": 6, "min": 0, "max": 6 },
         "biography": ""
       }
     },
@@ -16,7 +12,8 @@
       "attributes": {
         "level": { "value": 1 },
         "ac": { "value": 10 },
-        "slots": { "value": 0, "max": 10 }
+        "slots": { "value": 0, "max": 10 },
+        "wounds": { "value": 10, "max": 10 }
       },
       "abilities": {
         "str": { "value": 0 },
@@ -36,9 +33,7 @@
   "Item": {
     "types": ["item", "feature", "spell"],
     "templates": {
-      "base": {
-        "description": ""
-      }
+      "base": { "description": "" }
     },
     "item": {
       "templates": ["base"],

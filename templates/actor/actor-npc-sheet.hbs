@@ -1,67 +1,48 @@
 <form class="{{cssClass}} {{actor.type}} flexcol" autocomplete="off">
-
-  {{!-- Sheet Header --}}
   <header class="sheet-header">
     <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
     <div class="header-fields">
       <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="이름"/></h1>
-      
       <div class="resources grid grid-3col">
-
-        {{!-- Health --}}
         <div class="resource flex-group-center">
-          <label for="system.health.value" class="resource-label">HP (생명력)</label>
+          <label for="system.health.value" class="resource-label">HP</label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="system.health.value" value="{{system.health.value}}" data-dtype="Number"/>
             <span> / </span>
             <input type="text" name="system.health.max" value="{{system.health.max}}" data-dtype="Number"/>
           </div>
         </div>
-
-        {{!-- AC (Power 대신 추가) --}}
         <div class="resource flex-group-center">
-          <label for="system.attributes.ac.value" class="resource-label">AC (방어)</label>
+          <label for="system.attributes.ac.value" class="resource-label">AC</label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="system.attributes.ac.value" value="{{system.attributes.ac.value}}" data-dtype="Number"/>
           </div>
         </div>
-
-        {{!-- CR/Level --}}
         <div class="resource flex-group-center">
           <label for="system.cr" class="resource-label">레벨 (HD)</label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="system.cr" value="{{system.cr}}" data-dtype="Number"/>
           </div>
         </div>
-
       </div>
     </div>
   </header>
 
-  {{!-- Sheet Tab Navigation --}}
   <nav class="sheet-tabs tabs" data-group="primary">
     <a class="item" data-tab="description">설명</a>
     <a class="item" data-tab="items">아이템</a>
     <a class="item" data-tab="effects">효과</a>
   </nav>
 
-  {{!-- Sheet Body --}}
   <section class="sheet-body">
-
-    {{!-- Biography Tab --}}
     <div class="tab biography" data-group="primary" data-tab="description">
       {{editor system.biography target="system.biography" rollData=rollData button=true owner=owner editable=editable}}
     </div>
-
-    {{!-- Owned Items Tab --}}
     <div class="tab items" data-group="primary" data-tab="items">
        {{> "systems/rave-rpg/templates/actor/parts/actor-items.hbs"}}
     </div>
-
-    {{!-- Active Effects Tab --}}
     <div class="tab effects flexcol" data-group="primary" data-tab="effects">
       {{> "systems/rave-rpg/templates/actor/parts/actor-effects.hbs"}}
     </div>
-
   </section>
 </form>

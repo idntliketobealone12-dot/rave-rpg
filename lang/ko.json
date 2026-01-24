@@ -6,6 +6,11 @@
       "Wis": { "long": "통찰 (WIS)", "abbr": "통찰" },
       "Wil": { "long": "의지 (WIL)", "abbr": "의지" }
     },
+    "Attributes": {
+      "Level": "레벨",
+      "Wounds": "부상 (내구)",
+      "Slots": "물건 칸"
+    },
     "SheetLabels": {
       "Actor": "RAVE 캐릭터 시트",
       "Item": "RAVE 아이템 시트"

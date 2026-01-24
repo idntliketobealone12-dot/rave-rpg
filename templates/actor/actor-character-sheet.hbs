@@ -6,39 +6,45 @@
     <div class="header-fields">
       <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="이름"/></h1>
       
+      {{!-- 상단 리소스 바: 4열로 변경 (HP, AC, 레벨, 물건칸) --}}
       <div class="resources grid grid-4col">
 
-        {{!-- Health --}}
+        {{!-- 1. HP (생명력) --}}
         <div class="resource flex-group-center">
           <label for="system.health.value" class="resource-label">HP (생명력)</label>
           <div class="resource-content flexrow flex-center flex-between">
-          <input type="text" name="system.health.value" value="{{system.health.value}}" data-dtype="Number"/>
-          <span> / </span>
-          <input type="text" name="system.health.max" value="{{system.health.max}}" data-dtype="Number"/>
+            <input type="text" name="system.health.value" value="{{system.health.value}}" data-dtype="Number"/>
+            <span> / </span>
+            <input type="text" name="system.health.max" value="{{system.health.max}}" data-dtype="Number"/>
           </div>
         </div>
 
-        {{!-- AC --}}
+        {{!-- 2. AC (방어) --}}
         <div class="resource flex-group-center">
           <label for="system.attributes.ac.value" class="resource-label">AC (방어)</label>
           <div class="resource-content flexrow flex-center flex-between">
-          <input type="text" name="system.attributes.ac.value" value="{{system.attributes.ac.value}}" data-dtype="Number"/>
+            {{!-- AC는 보통 자동 계산되지만, 수정 가능하게 두거나 disabled 처리할 수 있습니다. 여기선 입력 가능하게 둡니다. --}}
+            <input type="text" name="system.attributes.ac.value" value="{{system.attributes.ac.value}}" data-dtype="Number"/>
           </div>
         </div>
 
-        {{!-- Level --}}
+        {{!-- 3. 레벨 --}}
         <div class="resource flex-group-center">
           <label for="system.attributes.level.value" class="resource-label">레벨</label>
           <div class="resource-content flexrow flex-center flex-between">
-          <input type="text" name="system.attributes.level.value" value="{{system.attributes.level.value}}" data-dtype="Number"/>
+            <input type="text" name="system.attributes.level.value" value="{{system.attributes.level.value}}" data-dtype="Number"/>
           </div>
         </div>
 
-        {{!-- Slots (Max는 자동계산) --}}
+        {{!-- 4. 물건 칸 (현재 / 최대) --}}
         <div class="resource flex-group-center">
-          <label class="resource-label">물건 칸(최대)</label>
+          <label class="resource-label">물건 칸 (Slots)</label>
           <div class="resource-content flexrow flex-center flex-between">
-            <span class="resource-label">{{system.attributes.slots.max}}</span>
+            {{!-- 현재 무게 (자동 계산되므로 disabled 권장) --}}
+            <input type="text" name="system.attributes.slots.value" value="{{system.attributes.slots.value}}" data-dtype="Number" disabled/>
+            <span> / </span>
+            {{!-- 최대 무게 (10+힘 자동 계산) --}}
+            <input type="text" name="system.attributes.slots.max" value="{{system.attributes.slots.max}}" data-dtype="Number" disabled/>
           </div>
         </div>
 
@@ -48,7 +54,6 @@
 
   {{!-- Sheet Tab Navigation --}}
   <nav class="sheet-tabs tabs" data-group="primary">
-    {{!-- Default tab is specified in actor-sheet.mjs --}}
     <a class="item" data-tab="features">특성</a>
     <a class="item" data-tab="description">설명</a>
     <a class="item" data-tab="items">물건</a>
@@ -63,18 +68,19 @@
     <div class="tab features" data-group="primary" data-tab="features">
       <section class="grid grid-3col">
         <aside class="sidebar">
-
           <div class="abilities flexcol">
             {{#each system.abilities as |ability key|}}
             <div class="ability flexrow flex-group-center">
+              {{!-- 능력치 라벨을 클릭하면 판정 (수정치 팝업) --}}
               <label for="system.abilities.{{key}}.value" class="resource-label rollable flexlarge align-left" data-roll="d20+@abilities.{{key}}.mod" data-label="{{ability.label}}">{{ability.label}}</label>
+              {{!-- 능력치 값 입력 --}}
               <input type="text" name="system.abilities.{{key}}.value" value="{{ability.value}}" data-dtype="Number"/>
             </div>
             {{/each}}
           </div>
         </aside>
 
-        {{!-- For the main features list, span the right two columns --}}
+        {{!-- Main Features --}}
         <section class="main grid-span-2">
           {{> "systems/rave-rpg/templates/actor/parts/actor-features.hbs"}}
         </section>

@@ -2,7 +2,7 @@
   "id": "rave-rpg",
   "title": "RAVE",
   "description": "The RAVE system for FoundryVTT!",
-  "version": "2.2.8",
+  "version": "2.2.9",
   "authors": [
     {
       "name": "blue_sphere",
@@ -37,8 +37,8 @@
   "packs": [],
   "packFolders": [],
   "socket": false,
-  "manifest": "https://raw.githubusercontent.com/idntliketobealone12-dot/rave-rpg/refs/heads/main/system.json",
-  "download": "https://github.com/idntliketobealone12-dot/rave-rpg/archive/refs/tags/2.2.8.zip",
+  "manifest": "https://raw.githubusercontent.com/idntliketobealone12-dot/rave-rpg/main/system.json",
+  "download": "https://github.com/idntliketobealone12-dot/rave-rpg/archive/refs/tags/2.2.9.zip",
   "background": "systems/rave-rpg/assets/anvil-impact.png",
   "gridDistance": 5,
   "gridUnits": "ft",

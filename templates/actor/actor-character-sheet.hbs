@@ -6,7 +6,7 @@
       
       <div class="resources grid grid-3col">
         <div class="resource flex-group-center">
-          <label for="system.health.value" class="resource-label">HP</label>
+          <label for="system.health.value" class="resource-label"><i class="fas fa-heart"></i> HP</label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="system.health.value" value="{{system.health.value}}" data-dtype="Number"/>
             <span> / </span>
@@ -14,7 +14,7 @@
           </div>
         </div>
         <div class="resource flex-group-center">
-          <label for="system.attributes.wounds.value" class="resource-label">부상</label>
+          <label for="system.attributes.wounds.value" class="resource-label"><i class="fas fa-band-aid"></i> {{localize 'RAVE.Attributes.Wounds'}}</label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="system.attributes.wounds.value" value="{{system.attributes.wounds.value}}" data-dtype="Number"/>
             <span> / </span>
@@ -22,25 +22,25 @@
           </div>
         </div>
         <div class="resource flex-group-center">
-          <label for="system.attributes.ac.value" class="resource-label">AC</label>
+          <label for="system.attributes.ac.value" class="resource-label"><i class="fas fa-shield-alt"></i> AC</label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="system.attributes.ac.value" value="{{system.attributes.ac.value}}" data-dtype="Number"/>
           </div>
         </div>
         <div class="resource flex-group-center">
-          <label for="system.attributes.level.value" class="resource-label">레벨</label>
+          <label for="system.attributes.level.value" class="resource-label"><i class="fas fa-star"></i> {{localize 'RAVE.Attributes.Level'}}</label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="system.attributes.level.value" value="{{system.attributes.level.value}}" data-dtype="Number"/>
           </div>
         </div>
         <div class="resource flex-group-center">
-          <label for="system.attributes.xp.value" class="resource-label">XP</label>
+          <label for="system.attributes.xp.value" class="resource-label"><i class="fas fa-trophy"></i> {{localize 'RAVE.Attributes.XP'}}</label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="system.attributes.xp.value" value="{{system.attributes.xp.value}}" data-dtype="Number"/>
           </div>
         </div>
         <div class="resource flex-group-center">
-          <label class="resource-label">물건 칸</label>
+          <label class="resource-label"><i class="fas fa-box"></i> {{localize 'RAVE.Attributes.Slots'}}</label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="system.attributes.slots.value" value="{{system.attributes.slots.value}}" data-dtype="Number" disabled/>
             <span> / </span>
@@ -48,7 +48,7 @@
           </div>
         </div>
         <div class="resource flex-group-center">
-          <label class="resource-label">돈</label>
+          <label class="resource-label"><i class="fas fa-coins"></i> {{localize 'RAVE.SheetLabels.Money'}}</label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="system.money" value="{{system.money}}" data-dtype="Number"/>
           </div>
@@ -58,10 +58,10 @@
   </header>
 
   <nav class="sheet-tabs tabs" data-group="primary">
-    <a class="item" data-tab="features">특성</a>
-    <a class="item" data-tab="description">설명</a>
-    <a class="item" data-tab="items">물건</a>
-    <a class="item" data-tab="effects">효과</a>
+    <a class="item" data-tab="features"><i class="fas fa-list"></i> {{localize 'RAVE.SheetLabels.Features'}}</a>
+    <a class="item" data-tab="description"><i class="fas fa-book"></i> {{localize 'RAVE.SheetLabels.Description'}}</a>
+    <a class="item" data-tab="items"><i class="fas fa-suitcase"></i> {{localize 'RAVE.SheetLabels.Items'}}</a>
+    <a class="item" data-tab="effects"><i class="fas fa-magic"></i> {{localize 'RAVE.SheetLabels.Effects'}}</a>
   </nav>
 
   <section class="sheet-body">
@@ -71,7 +71,13 @@
           <div class="abilities flexcol">
             {{#each system.abilities as |ability key|}}
             <div class="ability flexrow flex-group-center">
-              <label for="system.abilities.{{key}}.value" class="resource-label rollable flexlarge align-left" data-roll="d20+@abilities.{{key}}.mod" data-label="{{ability.label}}">{{ability.label}}</label>
+              <label for="system.abilities.{{key}}.value" class="resource-label rollable flexlarge align-left" data-roll="d20+@abilities.{{key}}.mod" data-label="{{ability.label}}">
+                {{#if (eq key "str")}}<i class="fas fa-dumbbell"></i>{{/if}}
+                {{#if (eq key "dex")}}<i class="fas fa-feather"></i>{{/if}}
+                {{#if (eq key "wis")}}<i class="fas fa-compass"></i>{{/if}}
+                {{#if (eq key "wil")}}<i class="fas fa-crown"></i>{{/if}}
+                {{ability.label}}
+              </label>
               <input type="text" name="system.abilities.{{key}}.value" value="{{ability.value}}" data-dtype="Number"/>
             </div>
             {{/each}}

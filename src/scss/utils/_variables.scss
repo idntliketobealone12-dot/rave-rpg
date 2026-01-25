@@ -1,9 +1,64 @@
-$padding-sm: 5px;
-$padding-md: 10px;
-$padding-lg: 20px;
+// Spacing
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 12px;
+$spacing-lg: 16px;
+$spacing-xl: 24px;
+$spacing-2xl: 32px;
 
-$border-groove: 2px groove #e0e0e0;
-$border-radius: 8px;
+// Padding
+$padding-xs: 4px;
+$padding-sm: 8px;
+$padding-md: 12px;
+$padding-lg: 16px;
+$padding-xl: 20px;
+
+// Border
+$border-width: 1px;
+$border-width-thick: 2px;
+$border-style: solid;
+$border-radius-sm: 4px;
+$border-radius: 6px;
+$border-radius-lg: 8px;
+$border-radius-xl: 12px;
+$border-radius-full: 9999px;
+
+// Shadows
+$shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
 $shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
-$shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
-$transition: all 0.3s ease;
+$shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+$shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
+$shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.18);
+
+// Transitions
+$transition-fast: all 0.15s ease;
+$transition: all 0.2s ease;
+$transition-slow: all 0.3s ease;
+
+// Typography
+$font-size-xs: 10px;
+$font-size-sm: 11px;
+$font-size-base: 13px;
+$font-size-md: 14px;
+$font-size-lg: 15px;
+$font-size-xl: 16px;
+$font-size-2xl: 18px;
+$font-size-3xl: 22px;
+
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+$line-height-tight: 1.2;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.75;
+
+// Z-index
+$z-dropdown: 1000;
+$z-sticky: 1020;
+$z-fixed: 1030;
+$z-modal-backdrop: 1040;
+$z-modal: 1050;
+$z-popover: 1060;
+$z-tooltip: 1070;

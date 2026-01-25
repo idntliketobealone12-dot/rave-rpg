@@ -1,28 +1,78 @@
-.resource-label {
-  font-weight: bold;
-  color: $c-primary;
-  margin-bottom: 4px;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.resource-content {
+// Resource Displays
+.resource {
   display: flex;
-  gap: 8px;
+  flex-direction: column;
   align-items: center;
+  gap: $spacing-xs;
+  padding: $padding-md;
   
-  input {
-    text-align: center;
-    font-weight: bold;
-    border: 2px solid $c-border;
-    padding: 4px 6px;
-    border-radius: $border-radius;
-    transition: $transition;
-    
-    &:focus {
-      border-color: $c-primary;
-      box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.1);
+  // Mausritter Card Style
+  background: $c-white;
+  border-radius: 10px;
+  border: 3px solid $c-black;
+  transition: $transition-fast;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+  }
+
+  .resource-label {
+    font-family: $font-primary;
+    font-weight: normal;
+    font-size: 1.1em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: $c-text;
+  }
+
+  .resource-content {
+    width: 100%;
+    gap: $spacing-xs;
+
+    input {
+      text-align: center;
+      font-weight: $font-weight-bold;
+      font-size: 1.5em;
+      
+      background: $c-background-alt;
+      border: 3px solid $c-black;
+      border-radius: 20px;
+      color: $c-text;
+      padding: 4px;
+      transition: $transition-fast;
+
+      &::placeholder {
+        color: $c-text-light;
+      }
+
+      &:hover:not(:disabled) {
+        background: $c-white;
+      }
+
+      &:focus {
+        outline: none;
+        background: $c-white;
+        transform: scale(1.05);
+      }
+
+      &:disabled {
+        background: $c-gray-300;
+        border-color: $c-gray-500;
+        cursor: not-allowed;
+      }
+    }
+
+    span {
+      display: none; // Hide slashes if any
     }
   }
+}
+
+// Resource Grid
+.resources {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: $spacing-sm;
+  margin-top: $spacing-sm;
 }

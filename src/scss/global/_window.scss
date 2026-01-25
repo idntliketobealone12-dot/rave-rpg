@@ -1,56 +1,65 @@
 .window-app {
-  font-family: $font-primary;
-  background-color: $c-background;
-  color: $c-text;
+  font-family: $font-secondary;
+  
+  .window-content {
+    background: $c-background;
+    color: $c-text;
+  }
 }
 
 .rollable {
   cursor: pointer;
   transition: $transition;
+  font-weight: bold;
   
   &:hover,
   &:focus {
-    color: $c-accent;
-    text-shadow: 0 0 8px rgba(231, 76, 60, 0.4);
-    transform: scale(1.05);
+    color: $c-black;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   }
 }
 
 /* Button Styles */
 button, .btn {
-  border-radius: $border-radius;
-  border: 1px solid $c-border;
-  padding: 6px 12px;
+  border-radius: 20px;
+  border: 4px solid $c-border;
+  padding: 4px 16px;
   background-color: $c-white;
   color: $c-text;
-  font-size: 13px;
+  font-family: $font-primary;
+  font-size: 1.1em;
   cursor: pointer;
   transition: $transition;
-  box-shadow: $shadow-sm;
+  box-shadow: none;
   
   &:hover {
-    background-color: $c-background;
-    box-shadow: $shadow-md;
+    background-color: $c-background-alt;
     transform: translateY(-1px);
   }
   
   &:active {
-    transform: translateY(0);
-    box-shadow: $shadow-sm;
+    transform: translateY(1px);
   }
 }
 
 /* Input Styles */
 input, textarea, select {
-  border: 1px solid $c-border;
-  border-radius: $border-radius;
-  padding: 6px 8px;
-  font-family: $font-primary;
+  border: none;
+  border-bottom: 2px solid $c-border;
+  border-radius: 0;
+  padding: 4px;
+  background: transparent;
+  font-family: $font-secondary;
+  color: $c-text;
   transition: $transition;
   
   &:focus {
     outline: none;
-    border-color: $c-primary;
-    box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.1);
+    border-bottom-width: 3px;
+    background: rgba(0,0,0,0.05);
+  }
+
+  &::placeholder {
+    color: $c-text-light;
   }
 }

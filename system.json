@@ -9,10 +9,10 @@
       "discord": "blue_sphere"
     }
   ],
-  "url": "Replace this with a link to your public repository",
+  "url": "https://github.com/blue-sphere/rave-rpg",
   "license": "LICENSE.txt",
   "readme": "README.md",
-  "bugs": "Replace this with a link to file issues or tickets",
+  "bugs": "https://github.com/blue-sphere/rave-rpg/issues",
   "changelog": "CHANGELOG.md",
   "media": [
     {
@@ -21,7 +21,6 @@
       "thumbnail": "systems/rave-rpg/assets/anvil-impact.png"
     }
   ],
-  "version": "2.2.8",
   "compatibility": {
     "minimum": 11,
     "verified": "13"
@@ -38,8 +37,8 @@
   "packs": [],
   "packFolders": [],
   "socket": false,
-  "manifest": "https://github.com/idntliketobealone12-dot/rave-rpg/blob/main/system.json",
-  "download": "https://github.com/idntliketobealone12-dot/rave-rpg/archive/refs/tags/2.2.8.zip",
+  "manifest": "https://raw.githubusercontent.com/blue-sphere/rave-rpg/main/system.json",
+  "download": "https://github.com/blue-sphere/rave-rpg/archive/refs/tags/2.2.8.zip",
   "background": "systems/rave-rpg/assets/anvil-impact.png",
   "gridDistance": 5,
   "gridUnits": "ft",

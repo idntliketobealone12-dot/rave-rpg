@@ -1,163 +1,184 @@
+/**
+ * Extend the base Item document
+ * @extends {Item}
+ */
 export class raveItem extends Item {
+  /**
+   * Prepare data for the item
+   */
   prepareData() {
     super.prepareData();
   }
 
+  /**
+   * Handle rolling this item
+   * @returns {Promise<void>}
+   */
   async roll() {
     const item = this;
     const actor = this.actor;
 
-    // 1. 주문 타입 처리
-    if (item.system?.itemType === 'spell') {
-      const spellLevel = item.system.spellLevel || 0;
-      const dc = 10 + spellLevel;
-      
-      const content = `
-        <form>
-          <div class="form-group">
-            <label style="font-weight:bold;">주문 레벨</label>
-            <input type="text" name="spellLevel" value="${spellLevel}" data-dtype="Number" style="width: 100%; box-sizing: border-box;"/>
-          </div>
-          <div class="form-group" style="margin-top: 10px;">
-            <label style="font-weight:bold;">난이도 (자동 계산: 10 + 주문 레벨)</label>
-            <input type="text" name="dc" value="${dc}" data-dtype="Number" disabled style="width: 100%; box-sizing: border-box; background-color: #e0e0e0;"/>
-          </div>
-        </form>
-      `;
+    if (!actor) {
+      ui.notifications.warn(game.i18n.localize("RAVE.SheetLabels.NoActor") || "This item has no associated actor.");
+      return;
+    }
 
-      new Dialog({
-        title: `${item.name} - 주문 판정`,
-        content: content,
-        buttons: {
-          roll: {
-            label: "굴리기",
-            icon: '<i class="fas fa-dice-d20"></i>',
-            callback: async (html) => {
-              const inputSpellLevel = parseInt(html.find('[name="spellLevel"]').val()) || 0;
-              const finalDc = 10 + inputSpellLevel;
-              
-              // 의지 능력치로 판정
-              const wilVal = actor.system.abilities.wil.value;
-              const rollFormula = `1d20 + ${wilVal}`;
-              const roll = new Roll(rollFormula, actor.getRollData());
-              await roll.evaluate();
-              
-              const total = roll.total;
-              const success = total >= finalDc;
-              const successText = success ? game.i18n.localize("RAVE.SheetLabels.Success") : game.i18n.localize("RAVE.SheetLabels.Failure");
-              const successStyle = success ? 'color: green; font-weight: bold;' : 'color: red; font-weight: bold;';
-              
-              const description = await TextEditor.enrichHTML(item.system.description, { async: true });
-              const rollHTML = await roll.render();
-              
-              const messageContent = `
-                <div class="chat-card item-card">
-                    <header class="card-header flexrow">
-                        <img src="${item.img}" title="${item.name}" width="24" height="24"/>
-                        <h4 class="item-name" style="font-size: 1em; margin: 0;">${item.name}</h4>
-                    </header>
-                    
-                    <div class="card-content">
-                        ${description}
-                    </div>
+    const itemType = item.system?.itemType;
 
-                    <div style="margin-top: 10px; font-weight: bold;">
-                        주문 판정 (의지 능력치)
-                    </div>
-                    <div style="margin-bottom: 10px;">
-                        난이도: ${finalDc}
-                    </div>
-                    ${rollHTML}
-                    
-                    <div style="margin-top: 10px; padding: 8px; background-color: #f5f5f5; border-radius: 4px;">
-                        <span style="${successStyle}">${successText}</span>
-                    </div>
-                </div>
-              `;
+    // Handle spell type
+    if (itemType === CONFIG.RAVE.itemTypes.spell) {
+      return this._rollSpell(item, actor);
+    }
 
-              ChatMessage.create({
-                user: game.user.id,
-                speaker: ChatMessage.getSpeaker({ actor: actor }),
-                content: messageContent,
-                type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-                rolls: [roll],
-                sound: CONFIG.sounds.dice
-              });
-            }
+    // Handle non-weapon items: display description in chat
+    if (itemType !== CONFIG.RAVE.itemTypes.weapon) {
+      return this._displayItemInChat(item, actor);
+    }
+
+    // Handle weapon: roll attack
+    return this._rollWeaponAttack(item, actor);
+  }
+
+  /**
+   * Roll a spell check
+   * @param {Item} item - The spell item
+   * @param {Actor} actor - The actor casting the spell
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _rollSpell(item, actor) {
+    const spellLevel = item.system.spellLevel || 0;
+    const dc = 10 + spellLevel;
+    
+    const content = `
+      <form>
+        <div class="form-group">
+          <label style="font-weight:bold;">${game.i18n.localize("RAVE.SheetLabels.SpellLevel")}</label>
+          <input type="text" name="spellLevel" value="${spellLevel}" data-dtype="Number" style="width: 100%; box-sizing: border-box;"/>
+        </div>
+        <div class="form-group" style="margin-top: 10px;">
+          <label style="font-weight:bold;">${game.i18n.localize("RAVE.SheetLabels.SpellDC")} (${game.i18n.localize("RAVE.SheetLabels.AutoCalculate") || "자동 계산"}: 10 + ${game.i18n.localize("RAVE.SheetLabels.SpellLevel")})</label>
+          <input type="text" name="dc" value="${dc}" data-dtype="Number" disabled style="width: 100%; box-sizing: border-box; background-color: #e0e0e0;"/>
+        </div>
+      </form>
+    `;
+
+    new Dialog({
+      title: `${item.name} - ${game.i18n.localize("RAVE.SheetLabels.SpellCheck")}`,
+      content: content,
+      buttons: {
+        roll: {
+          label: game.i18n.localize("RAVE.SheetLabels.Roll"),
+          icon: '<i class="fas fa-dice-d20"></i>',
+          callback: async (html) => {
+            const inputSpellLevel = parseInt(html.find('[name="spellLevel"]').val()) || 0;
+            const finalDc = 10 + inputSpellLevel;
+            
+            // Roll against WIL ability
+            const wilVal = actor.system.abilities?.wil?.value ?? 0;
+            const rollFormula = `1d20 + ${wilVal}`;
+            const roll = new Roll(rollFormula, actor.getRollData());
+            await roll.evaluate();
+            
+            const total = roll.total;
+            const success = total >= finalDc;
+            const successText = success 
+              ? game.i18n.localize("RAVE.SheetLabels.Success") 
+              : game.i18n.localize("RAVE.SheetLabels.Failure");
+            const successStyle = success 
+              ? 'color: green; font-weight: bold;' 
+              : 'color: red; font-weight: bold;';
+            
+            const description = await TextEditor.enrichHTML(item.system.description, { async: true });
+            const rollHTML = await roll.render();
+            
+            const messageContent = `
+              <div class="chat-card item-card">
+                  <header class="card-header flexrow">
+                      <img src="${item.img}" title="${item.name}" width="24" height="24"/>
+                      <h4 class="item-name" style="font-size: 1em; margin: 0;">${item.name}</h4>
+                  </header>
+                  
+                  <div class="card-content">
+                      ${description}
+                  </div>
+
+                  <div style="margin-top: 10px; font-weight: bold;">
+                      ${game.i18n.localize("RAVE.SheetLabels.SpellCheck")} (${game.i18n.localize("RAVE.Ability.Wil.long")})
+                  </div>
+                  <div style="margin-bottom: 10px;">
+                      ${game.i18n.localize("RAVE.SheetLabels.SpellDC")}: ${finalDc}
+                  </div>
+                  ${rollHTML}
+                  
+                  <div style="margin-top: 10px; padding: 8px; background-color: #f5f5f5; border-radius: 4px;">
+                      <span style="${successStyle}">${successText}</span>
+                  </div>
+              </div>
+            `;
+
+            ChatMessage.create({
+              user: game.user.id,
+              speaker: ChatMessage.getSpeaker({ actor: actor }),
+              content: messageContent,
+              type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+              rolls: [roll],
+              sound: CONFIG.sounds.dice
+            });
           }
-        },
-        default: "roll"
-      }).render(true);
-      return;
-    }
+        }
+      },
+      default: "roll"
+    }).render(true);
+  }
 
-    // 2. 무기가 아닌 경우: 채팅창에 설명 출력
-    // 'weapon' 타입이 아닐 때는 모두 일반 아이템으로 취급
-    if (item.system?.itemType !== 'weapon') {
-      const description = await TextEditor.enrichHTML(item.system.description, { async: true });
-      ChatMessage.create({
-        user: game.user.id,
-        speaker: ChatMessage.getSpeaker({ actor: actor }),
-        content: `
-            <div class="chat-card item-card">
-                <header class="card-header flexrow">
-                    <img src="${item.img}" title="${item.name}" width="24" height="24"/>
-                    <h4 class="item-name" style="font-size: 1em; margin: 0;">${item.name}</h4>
-                </header>
-                <div class="card-content">
-                    ${description}
-                </div>
-            </div>
-        `
-      });
-      return;
-    }
+  /**
+   * Display item description in chat
+   * @param {Item} item - The item to display
+   * @param {Actor} actor - The actor using the item
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _displayItemInChat(item, actor) {
+    const description = await TextEditor.enrichHTML(item.system.description, { async: true });
+    ChatMessage.create({
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker({ actor: actor }),
+      content: `
+          <div class="chat-card item-card">
+              <header class="card-header flexrow">
+                  <img src="${item.img}" title="${item.name}" width="24" height="24"/>
+                  <h4 class="item-name" style="font-size: 1em; margin: 0;">${item.name}</h4>
+              </header>
+              <div class="card-content">
+                  ${description}
+              </div>
+          </div>
+      `
+    });
+  }
 
-    // 3. 무기인 경우 ('weapon' 타입): 공격 굴림 (수정치 입력 다이얼로그)
-    let abilityKey, abilityVal, baseModifier;
+  /**
+   * Roll a weapon attack
+   * @param {Item} item - The weapon item
+   * @param {Actor} actor - The actor attacking
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _rollWeaponAttack(item, actor) {
+    // Determine base modifier
+    let baseModifier = 0;
     
     if (actor.type === 'npc') {
-      // NPC: 레벨(CR) 사용
-      baseModifier = actor.system.cr || 0;
+      baseModifier = actor.system.cr ?? 0;
     } else {
-      // 캐릭터: 능력치 사용
-      abilityKey = item.system.ability || 'str';
-      baseModifier = actor.system.abilities[abilityKey].value;
+      const abilityKey = item.system.ability || 'str';
+      baseModifier = actor.system.abilities?.[abilityKey]?.value ?? 0;
     }
     
-    // 수정치 입력 다이얼로그
-    let modifierInput = 0;
-    await new Promise(resolve => {
-      const dialogContent = `<div style="text-align: center;">
-        <label style="display: block; margin-bottom: 10px;">추가 수정치:</label>
-        <input type="number" id="modifier-input" value="0" style="width: 60px; padding: 4px; text-align: center;" />
-      </div>`;
-      
-      new Dialog({
-        title: `${item.name} - 공격 굴림`,
-        content: dialogContent,
-        buttons: {
-          roll: {
-            label: "굴림",
-            callback: (html) => {
-              const input = html.find('#modifier-input').val();
-              modifierInput = parseInt(input) || 0;
-              resolve();
-            }
-          },
-          cancel: {
-            label: "취소",
-            callback: () => {
-              modifierInput = null;
-              resolve();
-            }
-          }
-        },
-        default: "roll"
-      }).render(true);
-    });
-    
-    if (modifierInput === null) return;
+    // Prompt for additional modifier
+    let modifierInput = await this._promptForModifier(item.name);
+    if (modifierInput === null) return; // User cancelled
     
     const totalModifier = baseModifier + modifierInput;
     const attackFormula = `1d20 + ${totalModifier}`;
@@ -171,7 +192,9 @@ export class raveItem extends Item {
     const description = await TextEditor.enrichHTML(item.system.description, { async: true });
     const attackRollHTML = await attackRoll.render();
     
-    const criticalText = isCritical ? `<div style="margin-top: 10px; padding: 8px; background-color: #ffd700; color: #000; font-weight: bold; text-align: center; border-radius: 4px;">${game.i18n.localize("RAVE.SheetLabels.Critical")}</div>` : '';
+    const criticalText = isCritical 
+      ? `<div style="margin-top: 10px; padding: 8px; background-color: #ffd700; color: #000; font-weight: bold; text-align: center; border-radius: 4px;">${game.i18n.localize("RAVE.SheetLabels.Critical")}</div>` 
+      : '';
     
     const messageContent = `
         <div class="chat-card item-card">
@@ -211,6 +234,41 @@ export class raveItem extends Item {
         type: CONST.CHAT_MESSAGE_TYPES.ROLL,
         rolls: [attackRoll],
         sound: CONFIG.sounds.dice
+    });
+  }
+
+  /**
+   * Prompt user for an additional modifier
+   * @param {string} itemName - Name of the item for the dialog title
+   * @returns {Promise<number|null>} The modifier value, or null if cancelled
+   * @private
+   */
+  async _promptForModifier(itemName) {
+    return new Promise(resolve => {
+      const dialogContent = `<div style="text-align: center;">
+        <label style="display: block; margin-bottom: 10px;">${game.i18n.localize("RAVE.SheetLabels.AddModifier")}:</label>
+        <input type="number" id="modifier-input" value="0" style="width: 60px; padding: 4px; text-align: center;" />
+      </div>`;
+      
+      new Dialog({
+        title: `${itemName} - ${game.i18n.localize("RAVE.SheetLabels.Attack")}`,
+        content: dialogContent,
+        buttons: {
+          roll: {
+            label: game.i18n.localize("RAVE.SheetLabels.Roll"),
+            callback: (html) => {
+              const input = html.find('#modifier-input').val();
+              resolve(parseInt(input) || 0);
+            }
+          },
+          cancel: {
+            label: game.i18n.localize("RAVE.SheetLabels.Cancel"),
+            callback: () => resolve(null)
+          }
+        },
+        default: "roll",
+        close: () => resolve(null)
+      }).render(true);
     });
   }
 }

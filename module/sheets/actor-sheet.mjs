@@ -1,6 +1,13 @@
 import { onManageActiveEffect, prepareActiveEffectCategories } from '../helpers/effects.mjs';
 
+/**
+ * Extend the basic ActorSheet
+ * @extends {ActorSheet}
+ */
 export class raveActorSheet extends ActorSheet {
+  /**
+   * @override
+   */
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ['rave-rpg', 'sheet', 'actor'],
@@ -10,10 +17,16 @@ export class raveActorSheet extends ActorSheet {
     });
   }
 
+  /**
+   * @override
+   */
   get template() {
     return `systems/rave-rpg/templates/actor/actor-${this.actor.type}-sheet.hbs`;
   }
 
+  /**
+   * @override
+   */
   getData() {
     const context = super.getData();
     const actorData = context.data;
@@ -30,16 +43,39 @@ export class raveActorSheet extends ActorSheet {
 
     context.rollData = context.actor.getRollData();
     context.effects = prepareActiveEffectCategories(this.actor.allApplicableEffects());
+    
+    // 부상이 있는지 확인
+    context.hasWounds = false;
+    if (context.effects && typeof context.effects === 'object') {
+      for (let section of Object.values(context.effects)) {
+        if (section.effects && Array.isArray(section.effects)) {
+          if (section.effects.some(effect => effect.flags?.['rave-rpg']?.isWound)) {
+            context.hasWounds = true;
+            break;
+          }
+        }
+      }
+    }
 
     return context;
   }
 
+  /**
+   * Organize and classify items for character sheets
+   * @param {Object} context - Sheet context data
+   * @private
+   */
   _prepareCharacterData(context) {
     for (let [k, v] of Object.entries(context.system.abilities)) {
       v.label = game.i18n.localize(CONFIG.RAVE.abilities[k]) ?? k;
     }
   }
 
+  /**
+   * Organize and classify items for character sheets
+   * @param {Object} context - Sheet context data
+   * @private
+   */
   _prepareItems(context) {
     const features = [];
     const itemsByType = {
@@ -95,8 +131,10 @@ export class raveActorSheet extends ActorSheet {
     html.on('click', '.rollable', this._onRoll.bind(this));
     html.on('click', '.weapon-attack-button', this._onWeaponAttack.bind(this));
     html.on('click', '.spell-cast-button', this._onSpellCast.bind(this));
-    html.on('dblclick', '.item-name-dblclick', this._onItemNameDblClick.bind(this));
+    html.on('click', '.item-name-toggle', this._onItemNameToggle.bind(this));
+    html.on('dblclick', '.item-name-toggle', this._onItemNameDblClick.bind(this));
     html.on('click', '.add-wound-button', this._onAddWound.bind(this));
+    html.on('click', '.wound-delete-btn', this._onWoundDelete.bind(this));
     html.on('click', '.npc-ability-roll', this._onNpcAbilityRoll.bind(this));
 
     if (this.actor.isOwner) {
@@ -134,22 +172,22 @@ export class raveActorSheet extends ActorSheet {
     }
 
     if (dataset.roll) {
-      let label = dataset.label ? `[판정] ${dataset.label}` : '';
+      let label = dataset.label ? `[${game.i18n.localize("RAVE.SheetLabels.Check") || "판정"}] ${dataset.label}` : '';
       
       const content = `
         <div class="form-group">
-            <label style="font-weight:bold; display:block; margin-bottom:5px;">추가 수정치 (예: +2, -5)</label>
+            <label style="font-weight:bold; display:block; margin-bottom:5px;">${game.i18n.localize("RAVE.SheetLabels.AddModifier")} (${game.i18n.localize("RAVE.SheetLabels.ModifierPlaceholder")})</label>
             <input type="text" name="modifier" value="" placeholder="0" style="width: 100%; box-sizing: border-box;" autofocus/>
         </div>
       `;
 
       new Dialog({
-        title: `${dataset.label || '능력치'} 판정`,
+        title: `${dataset.label || game.i18n.localize("RAVE.SheetLabels.Ability") || "능력치"} ${game.i18n.localize("RAVE.SheetLabels.Check") || "판정"}`,
         content: content,
         buttons: {
           roll: {
             icon: '<i class="fas fa-dice-d20"></i>',
-            label: "굴리기",
+            label: game.i18n.localize("RAVE.SheetLabels.Roll"),
             callback: async (html) => {
               const modifier = html.find('[name="modifier"]').val();
               const formula = modifier ? `${dataset.roll} + ${modifier}` : dataset.roll;
@@ -190,6 +228,29 @@ export class raveActorSheet extends ActorSheet {
     }
   }
 
+  /**
+   * Toggle item description visibility
+   * @param {Event} event - The click event
+   * @private
+   */
+  async _onItemNameToggle(event) {
+    event.preventDefault();
+    const header = $(event.currentTarget);
+    const li = header.closest('.item');
+    const description = li.find('.item-description');
+    const icon = header.find('.item-toggle-icon');
+    
+    // Toggle description with slide animation
+    description.slideToggle(200);
+    
+    // Rotate chevron icon
+    if (description.is(':visible')) {
+      icon.css('transform', 'rotate(90deg)');
+    } else {
+      icon.css('transform', 'rotate(0deg)');
+    }
+  }
+
   async _onItemNameDblClick(event) {
     event.preventDefault();
     const li = $(event.currentTarget).parents('.item');
@@ -205,13 +266,15 @@ export class raveActorSheet extends ActorSheet {
     const woundSlots = parseInt(document.getElementById('wound-slots').value) || 1;
     
     if (!woundName.trim()) {
-      ui.notifications.warn('부상 이름을 입력해주세요.');
+      ui.notifications.warn(game.i18n.localize("RAVE.SheetLabels.WoundNameRequired"));
       return;
     }
     
+    const woundLabel = game.i18n.localize("RAVE.SheetLabels.Wound") || "부상";
+    
     // Active Effect로 부상 추가
     const effectData = {
-      name: `부상: ${woundName}`,
+      name: `${woundLabel}: ${woundName}`,
       icon: 'icons/svg/blood.svg',
       changes: [
         {
@@ -234,7 +297,8 @@ export class raveActorSheet extends ActorSheet {
     document.getElementById('wound-name').value = '';
     document.getElementById('wound-slots').value = '1';
     
-    ui.notifications.info(`부상 "${woundName}" (${woundSlots}칸)이 추가되었습니다.`);
+    const slotsLabel = game.i18n.localize("RAVE.SheetLabels.Slots") || "칸";
+    ui.notifications.info(`${woundLabel} "${woundName}" (${woundSlots}${slotsLabel}) ${game.i18n.localize("RAVE.SheetLabels.WoundAdded")}`);
   }
 
   async _onNpcAbilityRoll(event) {
@@ -243,18 +307,18 @@ export class raveActorSheet extends ActorSheet {
     
     const content = `
       <div class="form-group">
-          <label style="font-weight:bold; display:block; margin-bottom:5px;">추가 수정치 (예: +2, -5)</label>
+          <label style="font-weight:bold; display:block; margin-bottom:5px;">${game.i18n.localize("RAVE.SheetLabels.AddModifier")} (${game.i18n.localize("RAVE.SheetLabels.ModifierPlaceholder")})</label>
           <input type="text" name="modifier" value="" placeholder="0" style="width: 100%; box-sizing: border-box;" autofocus/>
       </div>
     `;
 
     new Dialog({
-      title: `${this.actor.name} - d20+레벨 판정`,
+      title: `${this.actor.name} - d20+${game.i18n.localize("RAVE.Attributes.Level") || "레벨"} ${game.i18n.localize("RAVE.SheetLabels.Check") || "판정"}`,
       content: content,
       buttons: {
         roll: {
           icon: '<i class="fas fa-dice-d20"></i>',
-          label: "굴리기",
+          label: game.i18n.localize("RAVE.SheetLabels.Roll"),
           callback: async (html) => {
             const modifier = html.find('[name="modifier"]').val();
             const formula = modifier ? `1d20 + ${crVal} + ${modifier}` : `1d20 + ${crVal}`;
@@ -269,5 +333,19 @@ export class raveActorSheet extends ActorSheet {
       default: "roll",
       close: () => {}
     }).render(true);
+  }
+
+  /**
+   * 부상 제거 핸들러
+   * @param {Event} event - 클릭 이벤트
+   * @private
+   */
+  async _onWoundDelete(event) {
+    event.preventDefault();
+    const effectId = event.currentTarget.dataset.effectId;
+    const effect = this.actor.effects.get(effectId);
+    if (effect) {
+      await effect.delete();
+    }
   }
 }

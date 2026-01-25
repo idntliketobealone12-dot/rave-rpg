@@ -1,3 +1,9 @@
+/**
+ * RAVE RPG System for Foundry VTT
+ * Author: blue_sphere
+ * Software License: MIT
+ */
+
 import { raveActor } from './documents/actor.mjs';
 import { raveItem } from './documents/item.mjs';
 import { raveActorSheet } from './sheets/actor-sheet.mjs';
@@ -5,6 +11,10 @@ import { raveItemSheet } from './sheets/item-sheet.mjs';
 import { preloadHandlebarsTemplates } from './helpers/templates.mjs';
 import { RAVE } from './helpers/config.mjs';
 
+/**
+ * Initialize the RAVE RPG system
+ * Set up configuration, register sheets, and preload templates
+ */
 Hooks.once('init', function () {
   game.raverpg = {
     raveActor,
@@ -34,7 +44,7 @@ Hooks.once('init', function () {
     label: 'RAVE.SheetLabels.Item',
   });
 
-  // [수정됨] 헬퍼 등록을 여기서 직접 실행 (확실한 작동 보장)
+  // Register Handlebars helpers
   Handlebars.registerHelper('toLowerCase', function (str) {
     return str.toLowerCase();
   });
@@ -46,6 +56,10 @@ Hooks.once('init', function () {
   return preloadHandlebarsTemplates();
 });
 
+/**
+ * Ready hook - set up runtime functionality
+ * Register macro creation and chat message handlers
+ */
 Hooks.once('ready', function () {
   Hooks.on('hotbarDrop', (bar, data, slot) => createItemMacro(data, slot));
   
@@ -99,12 +113,13 @@ Hooks.once('ready', function () {
       
       const damageRollHTML = await damageRoll.render();
       const critText = isCritical ? ` (${game.i18n.localize("RAVE.SheetLabels.Critical")})` : '';
+      const damageLabel = game.i18n.localize("RAVE.SheetLabels.Damage") || "피해";
       
       const damageContent = `
         <div class="chat-card item-card">
           <header class="card-header flexrow">
             <img src="${item.img}" title="${item.name}" width="24" height="24"/>
-            <h4 class="item-name" style="font-size: 1em; margin: 0;">${item.name} - ${modeLabel} 피해${critText}</h4>
+            <h4 class="item-name" style="font-size: 1em; margin: 0;">${item.name} - ${modeLabel} ${damageLabel}${critText}</h4>
           </header>
           ${damageRollHTML}
         </div>
@@ -122,6 +137,12 @@ Hooks.once('ready', function () {
   });
 });
 
+/**
+ * Create a macro from an item drop
+ * @param {Object} data - The dropped data
+ * @param {number} slot - The hotbar slot
+ * @returns {Promise<boolean>}
+ */
 async function createItemMacro(data, slot) {
   if (data.type !== 'Item') return;
   if (!data.uuid.includes('Actor.') && !data.uuid.includes('Token.')) {
@@ -147,6 +168,10 @@ async function createItemMacro(data, slot) {
   return false;
 }
 
+/**
+ * Roll an item macro from the hotbar
+ * @param {string} itemUuid - The UUID of the item to roll
+ */
 function rollItemMacro(itemUuid) {
   const dropData = {
     type: 'Item',

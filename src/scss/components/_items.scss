@@ -1,160 +1,288 @@
-// Section Header
-.items-header {
-  height: 32px;
-  margin: 8px 0 4px 0;
-  padding: 0 8px;
-  align-items: center;
-  background: linear-gradient(135deg, $c-primary-dark 0%, $c-primary 100%);
-  border-radius: $border-radius;
-  font-weight: bold;
-  color: $c-white;
-  box-shadow: $shadow-sm;
-  
-  > * {
-    font-size: 12px;
-    text-align: center;
-    color: $c-white;
-  }
-  
-  .item-name {
-    font-weight: bold;
-    padding-left: 8px;
-    text-align: left;
-    display: flex;
-    color: $c-white;
-  }
-}
-
-// -----------------------------------------
-// Items Lists
-// -----------------------------------------
-
+// Items List Container
 .items-list {
   list-style: none;
   margin: 0;
   padding: 0;
   overflow-y: auto;
   scrollbar-width: thin;
-  color: $c-tan;
+  scrollbar-color: $c-gray-400 $c-gray-200;
 
-  // Child lists
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $c-gray-200;
+    border-radius: $border-radius-full;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $c-gray-400;
+    border-radius: $border-radius-full;
+
+    &:hover {
+      background: $c-gray-500;
+    }
+  }
+
   .item-list {
     list-style: none;
     margin: 0;
     padding: 0;
   }
+}
 
-  // Item Name
+// Items Header
+.items-header {
+  height: 36px;
+  margin: $spacing-md 0 $spacing-xs 0;
+  padding: 0 $padding-md;
+  align-items: center;
+  
+  // Mausritter Style Header
+  background: transparent;
+  border-bottom: 2px solid $c-black;
+  border-top: 2px solid $c-black;
+  border-radius: 0;
+  
+  font-family: $font-primary;
+  font-size: 1.1em;
+  font-weight: normal;
+  color: $c-text;
+  box-shadow: none;
+
+  > * {
+    text-align: center;
+  }
+
+  .item-name {
+    font-weight: $font-weight-semibold;
+    padding-left: $padding-sm;
+    text-align: left;
+    display: flex;
+    align-items: center;
+  }
+
+  .item-controls {
+    display: flex;
+    justify-content: flex-end;
+
+    a {
+      color: $c-primary;
+      transition: $transition-fast;
+      font-size: $font-size-sm;
+
+      &:hover {
+        color: $c-accent;
+      }
+    }
+  }
+}
+
+// Individual Item
+.items-list .item {
+  border: none;
+  border-bottom: 1px solid $c-border-light;
+  border-radius: 0;
+  margin-bottom: 0;
+  transition: none;
+  background: transparent;
+  padding: 4px 0;
+
+  &:hover {
+    background: transparent;
+    color: $c-black;
+    font-weight: bold; // Text creates shadow on hover in Mausritter
+    text-shadow: 0 0 1px $c-black;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  .item-header {
+    display: flex;
+    align-items: center;
+    padding: $padding-sm $padding-md;
+    border-bottom: 1px solid transparent;
+  }
+
   .item-name {
     flex: 2;
     margin: 0;
     overflow: hidden;
-    font-size: 13px;
+    font-size: $font-size-base;
     text-align: left;
     align-items: center;
     display: flex;
-    
+    gap: $spacing-sm;
+
     h3, h4 {
       margin: 0;
       white-space: nowrap;
       overflow-x: hidden;
+      text-overflow: ellipsis;
+      font-weight: $font-weight-medium;
+      color: $c-text;
     }
-  }
 
-  // Control Buttons
-  .item-controls {
-    display: flex;
-    flex: 0 0 100px;
-    justify-content: flex-end;
-    gap: 4px;
-    
-    a {
-      font-size: 11px;
-      text-align: center;
-      padding: 4px 6px;
-      color: $c-accent;
-      transition: $transition;
-      border-radius: 3px;
-      
+    .item-image {
+      flex: 0 0 30px;
+      height: 30px;
+      background-size: 30px;
+      border: 1px solid $c-border-light;
+      border-radius: $border-radius-sm;
+      margin-right: 0;
+      overflow: hidden;
+      transition: $transition-fast;
+
       &:hover {
-        background-color: rgba($c-accent, 0.1);
-        color: darken($c-accent, 10%);
+        transform: scale(1.1);
+        box-shadow: $shadow-sm;
+        border-color: $c-accent;
       }
-    }
-  }
 
-  // Individual Item
-  .item {
-    align-items: center;
-    padding: 6px 4px;
-    border-bottom: 1px solid $c-border;
-    background-color: $c-white;
-    transition: $transition;
-    
-    &:hover {
-      background-color: $c-background;
-      box-shadow: inset 0 0 0 1px $c-border;
-    }
-    
-    &:last-child { 
-      border-bottom: none; 
-    }
-    
-    .item-name {
-      color: $c-dark;
-      
-      .item-image {
-        flex: 0 0 30px;
-        height: 30px;
-        background-size: 30px;
-        border: 2px solid $c-border;
-        border-radius: $border-radius;
-        margin-right: 8px;
+      img {
+        width: 100%;
+        height: 100%;
         object-fit: cover;
       }
     }
   }
 
-  .item-prop {
-    text-align: center;
-    border-left: 1px solid $c-border;
-    border-right: 1px solid $c-border;
-    font-size: 12px;
-    padding: 0 4px;
+  // Item Toggle Icon
+  .item-toggle-icon {
+    color: $c-text-muted;
+    transition: transform 0.2s ease;
   }
 
-  // Section Header
-  .items-header {
-    height: 32px;
-    margin: 8px 0 4px 0;
-    padding: 0 8px;
+  .item-name-toggle {
+    display: flex;
     align-items: center;
-    background: linear-gradient(135deg, $c-primary-dark 0%, $c-primary 100%);
-    border-radius: $border-radius;
-    font-weight: bold;
-    color: $c-white;
-    box-shadow: $shadow-sm;
-    
-    > * {
-      font-size: 12px;
-      text-align: center;
-      color: $c-white;
+    cursor: pointer;
+    transition: $transition-fast;
+
+    &:hover {
+      color: $c-accent;
+
+      .item-toggle-icon {
+        color: $c-accent;
+      }
     }
-    
-    .item-name {
-      padding-left: 8px;
-      text-align: left;
-      color: $c-white;
+  }
+
+  // Item Description
+  .item-description {
+    padding: $padding-md $padding-md $padding-md $spacing-2xl;
+    border-top: 1px solid $c-border-light;
+    background: $c-background-alt;
+    color: $c-text-muted;
+    font-size: $font-size-sm;
+    line-height: $line-height-relaxed;
+    border-bottom-left-radius: $border-radius-sm;
+    border-bottom-right-radius: $border-radius-sm;
+
+    p {
+      margin: $spacing-xs 0;
+
+      &:first-child {
+        margin-top: 0;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  // Item Controls
+  .item-controls {
+    display: flex;
+    flex: 0 0 auto;
+    justify-content: flex-end;
+    gap: $spacing-sm;
+    align-items: center;
+
+    a {
+      font-size: $font-size-base;
+      text-align: center;
+      color: $c-text-muted;
+      padding: $padding-xs;
+      border-radius: $border-radius-sm;
+      transition: $transition-fast;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+
+      &:hover {
+        color: $c-white;
+        background: $c-accent;
+        transform: scale(1.1);
+      }
+
+      &.item-delete:hover {
+        background: $c-danger;
+      }
+
+      &.weapon-attack-button:hover,
+      &.spell-cast-button:hover {
+        background: $c-success;
+      }
+    }
+  }
+
+  // Item Properties
+  .item-formula,
+  .item-quantity,
+  .item-weight,
+  .item-prop {
+    text-align: center;
+    font-size: $font-size-md;
+    color: $c-text;
+    padding: 0 $padding-sm;
+    font-weight: $font-weight-medium;
+  }
+}
+
+// Inventory Header (Top of items list)
+.inventory-header {
+  background: $c-primary;
+  color: $c-white;
+  padding: $padding-md;
+  border-radius: $border-radius-sm;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-sm;
+
+  .item-name {
+    color: $c-white;
+    font-weight: $font-weight-semibold;
+  }
+
+  .item-controls a {
+    color: $c-white;
+    padding: $padding-xs $padding-md;
+    background: rgba($c-white, 0.2);
+    border-radius: $border-radius-sm;
+    transition: $transition-fast;
+
+    &:hover {
+      background: rgba($c-white, 0.3);
+      transform: translateY(-1px);
     }
   }
 }
 
-// Item Formula/Dice Display
-.item-formula {
-  flex: 0 0 200px;
-  padding: 0 8px;
-  font-family: monospace;
-  font-size: 12px;
-  color: $c-info;
-  font-weight: 500;
+// Armor Info
+.armor-info {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+
+  span {
+    font-size: $font-size-xs;
+    color: $c-text-muted;
+    font-style: italic;
+  }
 }

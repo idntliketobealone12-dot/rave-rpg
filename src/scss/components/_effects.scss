@@ -1,35 +1,100 @@
+// Effects List
 .effects {
   .items-list {
-    margin-top: 12px;
+    margin-top: $spacing-md;
   }
   
   .item {
-    padding: 8px 4px;
-    border-radius: $border-radius;
+    padding: $padding-md 0;
+    border-radius: 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid $c-border-light;
+    margin-bottom: 0;
+    transition: none;
+
+    &:hover {
+      background: transparent;
+      color: $c-black;
+      text-shadow: 0 0 1px $c-black;
+    }
     
     .effect-source,
     .effect-duration,
     .effect-controls {
       text-align: center;
-      border-left: 1px solid $c-border;
-      border-right: 1px solid $c-border;
-      font-size: 11px;
-      padding: 0 4px;
+      font-size: $font-size-sm;
+      padding: 0 $padding-sm;
+      color: $c-text;
+    }
+
+    .effect-source {
+      font-weight: $font-weight-medium;
+    }
+
+    .effect-duration {
+      color: $c-text-muted;
+      font-style: italic;
     }
 
     .effect-controls {
       border: none;
       display: flex;
       justify-content: flex-end;
-      gap: 4px;
+      gap: $spacing-sm;
       
       a {
-        color: $c-accent;
-        transition: $transition;
+        color: $c-text-muted;
+        transition: $transition-fast;
+        padding: $padding-xs;
+        border-radius: $border-radius-sm;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
         
         &:hover {
-          color: darken($c-accent, 10%);
+          color: $c-white;
+          background: $c-accent;
+          transform: scale(1.1);
         }
+
+        &.effect-control[data-action="delete"]:hover {
+          background: $c-danger;
+        }
+      }
+    }
+  }
+
+  .effects-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $padding-md;
+    background: $c-background-alt;
+    border-radius: $border-radius-sm;
+    margin-bottom: $spacing-md;
+    border: 1px solid $c-border-light;
+
+    h3 {
+      margin: 0;
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: $c-text;
+    }
+
+    .effect-create {
+      color: $c-accent;
+      padding: $padding-xs $padding-md;
+      background: rgba($c-accent, 0.1);
+      border-radius: $border-radius-sm;
+      transition: $transition-fast;
+      font-weight: $font-weight-medium;
+
+      &:hover {
+        background: $c-accent;
+        color: $c-white;
       }
     }
   }

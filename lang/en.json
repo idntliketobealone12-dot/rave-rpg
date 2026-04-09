@@ -49,6 +49,8 @@
       "RollImpairedDamage": "약화된 피해 굴리기",
       "DamageOptions": "피해 옵션",
       "DamageMode": "피해 모드",
+      "ExtraDieType": "추가 다이스",
+      "NoExtraDie": "없음",
       "UseExtraDice": "추가 다이스 사용",
       "ExtraDiceFormula": "추가 다이스 공식",
       "ExtraDiceHint": "예: 1d6, 1d8 + 1d4",

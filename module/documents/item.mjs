@@ -214,14 +214,8 @@ export class raveItem extends Item {
             ${criticalText}
             
             <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 5px;">
-                <button class="damage-button" data-item-id="${item.id}" data-actor-id="${actor.id}" data-mode="normal" data-crit="${isCritical}" style="padding: 5px; cursor: pointer;">
-                    ${game.i18n.localize("RAVE.SheetLabels.RollNormalDamage")}
-                </button>
-                <button class="damage-button" data-item-id="${item.id}" data-actor-id="${actor.id}" data-mode="enhanced" data-crit="${isCritical}" style="padding: 5px; cursor: pointer;">
-                    ${game.i18n.localize("RAVE.SheetLabels.RollEnhancedDamage")}
-                </button>
-                <button class="damage-button" data-item-id="${item.id}" data-actor-id="${actor.id}" data-mode="impaired" data-crit="${isCritical}" style="padding: 5px; cursor: pointer;">
-                    ${game.i18n.localize("RAVE.SheetLabels.RollImpairedDamage")}
+              <button class="damage-button" data-item-id="${item.id}" data-actor-id="${actor.id}" data-crit="${isCritical}" style="padding: 5px; cursor: pointer;">
+                ${game.i18n.localize("RAVE.SheetLabels.RollDamage")}
                 </button>
             </div>
         </div>

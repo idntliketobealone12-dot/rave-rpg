@@ -542,7 +542,7 @@ function getRemovableDamageDice(damageData) {
   return damageData.components.flatMap((component) => {
     if (!component.included || component.removable === false) return [];
     return (component.dice ?? [])
-      .filter((die) => die.active && die.applied)
+      .filter((die) => die.active && die.result >= 4)
       .map((die) => ({ component, die }));
   });
 }

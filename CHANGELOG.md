@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2.3.1 - 2026-04-10
+
+### Fixed
+- Damage workflow now uses a single chat button with mode selection in the damage options dialog
+- Extra damage die selection now uses fixed die choices instead of a freeform formula field
+- Weapon and extra dice are combined with `kh1` before enhanced or impaired damage is resolved
+- Removable dice listing now follows the updated damage rules and only shows active dice with results of 4 or higher
+- Damage summary text uses a darker color for readability
+
 ## 2.3.0 - 2026-04-10
 
 ### Added

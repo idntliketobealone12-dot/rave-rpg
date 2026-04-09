@@ -1,6 +1,6 @@
 {
   "name": "rave-rpg",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "CSS compiler for the rave system",
   "scripts": {
     "build": "sass src/scss/rave-rpg.scss css/rave-rpg.css --style=expanded --no-source-map",

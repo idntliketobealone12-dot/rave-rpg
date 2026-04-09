@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 2.3.0 - 2026-04-10
+
+### Added
+- Structured damage rolling with optional extra dice and extra flat damage
+- Damage chat controls for removing individual rolled dice and recalculating totals
+- Additional localization keys for damage option and die management UI
+
+### Improved
+- Updated system compatibility metadata to indicate Foundry VTT v14 verification
+- Updated README compatibility badge to Foundry v14
+
 ## 2.2.8 - 2026-01-25
 
 ### Fixed

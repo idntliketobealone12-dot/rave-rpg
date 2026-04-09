@@ -506,6 +506,9 @@ h1, h2, h3, h4, h5, h6 {
   border-color: #adb5bd;
   cursor: not-allowed;
 }
+.rave-rpg.sheet .resource .resource-content input.xp-input {
+  min-width: 120px;
+}
 .rave-rpg.sheet .resource .resource-content span {
   display: none;
 }

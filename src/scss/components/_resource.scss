@@ -61,6 +61,10 @@
         border-color: $c-gray-500;
         cursor: not-allowed;
       }
+
+      &.xp-input {
+        min-width: 120px; // Wider input for large XP values
+      }
     }
 
     span {
